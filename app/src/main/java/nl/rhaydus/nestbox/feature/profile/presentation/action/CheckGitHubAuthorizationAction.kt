@@ -29,7 +29,7 @@ data object CheckGitHubAuthorizationAction : ProfileAction {
                             scope.setState { it.copy(link = GitHubLinkState.Connected(result.account)) }
                         }
 
-                        // Still waiting, or an unknown GitHub verdict — keep showing the code, the
+                        // Still waiting, or an unknown GitHub verdict, keep showing the code, the
                         // user can return again. Only a definitive verdict ends the attempt.
                         AuthorizationResult.Pending,
                         AuthorizationResult.Failed -> scope.setState { it.copy(link = link.copy(isChecking = false)) }
@@ -46,7 +46,7 @@ data object CheckGitHubAuthorizationAction : ProfileAction {
                     }
                 }
                 .onFailure {
-                    // A thrown failure here is a transient transport error while polling — keep
+                    // A thrown failure here is a transient transport error while polling, keep
                     // showing the code so the user can return and we retry on the next resume.
                     scope.setState { it.copy(link = link.copy(isChecking = false)) }
                 }

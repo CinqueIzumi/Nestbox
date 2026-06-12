@@ -21,7 +21,7 @@ interface GitHubAuthRemoteDataSource {
     suspend fun fetchUser(token: String): GitHubUserResponse
 }
 
-// The `Accept: application/json` header on each call is required — without it GitHub returns
+// The `Accept: application/json` header on each call is required. Without it GitHub returns
 // form-encoded bodies that the JSON deserializer can't parse.
 class GitHubAuthRemoteDataSourceImpl(private val client: HttpClient) : GitHubAuthRemoteDataSource {
 
