@@ -30,6 +30,7 @@ fun BottomFloatingBar(modifier: Modifier = Modifier) {
 
         screens.forEach { tab: Tab ->
             val isSelected = tabNavigator.current == tab
+
             val iconPainter = tab.options.icon ?: return@forEach
 
             ToggleButton(

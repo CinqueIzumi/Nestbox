@@ -18,7 +18,7 @@ object HomeScreen : Screen {
 
         HomeScreen(
             state = state,
-            runAction = screenModel::runAction
+            runAction = screenModel::runAction,
         )
     }
 

@@ -12,11 +12,11 @@ import cafe.adriel.voyager.navigator.Navigator
 object RootScreen : Screen {
     @Composable
     override fun Content() {
-        Scaffold() {
+        Scaffold {
             Surface(
-                modifier = Modifier.Companion
+                modifier = Modifier
                     .fillMaxSize()
-                    .padding(it)
+                    .padding(it),
             ) {
                 Navigator(BottomBarScreen)
             }
