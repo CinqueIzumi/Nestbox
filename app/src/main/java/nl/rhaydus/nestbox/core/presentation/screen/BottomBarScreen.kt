@@ -28,7 +28,7 @@ import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import nl.rhaydus.nestbox.core.presentation.util.LocalBottomBarPadding
 import nl.rhaydus.nestbox.core.presentation.widget.BottomFloatingBar
-import nl.rhaydus.nestbox.feature.home.screen.HomeTab
+import nl.rhaydus.nestbox.feature.home.presentation.screen.HomeTab
 
 object BottomBarScreen : Screen {
     @Composable
