@@ -7,4 +7,6 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- Warm reading-room ground, matches surface/background light (Color.kt). -->
+    <color name="splash_background">#FFF8F6</color>
 </resources>
