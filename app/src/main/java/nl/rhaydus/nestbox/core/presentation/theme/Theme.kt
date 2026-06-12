@@ -1,4 +1,4 @@
-package nl.rhaydus.nestbox.ui.theme
+package nl.rhaydus.nestbox.core.presentation.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
