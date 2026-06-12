@@ -9,8 +9,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
-import nl.rhaydus.nestbox.core.feature.home.screen.HomeTab
-import nl.rhaydus.nestbox.core.feature.profile.ProfileTab
+import nl.rhaydus.nestbox.feature.home.screen.HomeTab
+import nl.rhaydus.nestbox.feature.profile.ProfileTab
 
 private val bottomBarScreens = listOf(
     HomeTab,

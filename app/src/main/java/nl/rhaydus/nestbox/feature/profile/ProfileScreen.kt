@@ -1,4 +1,4 @@
-package nl.rhaydus.nestbox.core.feature.profile
+package nl.rhaydus.nestbox.feature.profile
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

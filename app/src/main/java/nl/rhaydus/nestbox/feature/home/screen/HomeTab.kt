@@ -1,4 +1,4 @@
-package nl.rhaydus.nestbox.core.feature.home.screen
+package nl.rhaydus.nestbox.feature.home.screen
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home

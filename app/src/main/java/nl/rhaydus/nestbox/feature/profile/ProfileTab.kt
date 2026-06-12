@@ -1,4 +1,4 @@
-package nl.rhaydus.nestbox.core.feature.profile
+package nl.rhaydus.nestbox.feature.profile
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person

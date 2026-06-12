@@ -1,4 +1,4 @@
-package nl.rhaydus.nestbox.core.feature.home.screen
+package nl.rhaydus.nestbox.feature.home.screen
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
