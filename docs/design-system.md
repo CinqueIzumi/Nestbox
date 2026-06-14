@@ -16,13 +16,14 @@ roles below map one-to-one onto it.
 
 Everything in Nestbox is the Doveletter. There are no other sources, no feeds to add, no
 publications or developers to follow, and nothing to filter by source, because there is only one
-source. The whole job of the app is to make reading each issue of the Doveletter calm and pleasant.
+source. The whole job of the app is to make reading each publication of the Doveletter calm and pleasant.
 
-The content is shaped as **issues** and **entries**. An issue is one edition of the Doveletter,
-dated and numbered. An entry is a single piece inside an issue: a short write-up about a library, a
-release, a technique, or a link worth reading, usually with a few paragraphs of commentary and the
-occasional code snippet. The reader browses issues, opens one to read its entries, marks things read
-as they go, and saves entries to return to later.
+The content is shaped as **publications**, each of one of three **types**: a **weekly letter** (a
+dated, numbered edition that gathers several **entries**, short write-ups and links), an **article**,
+or an **interview**. The reader browses publications, opens one to read, marks them read as they go,
+and saves publications to return to later. Inside a weekly letter, individual entries can be read and
+saved the same way. The word "issue" is deliberately avoided here so it stays free for GitHub Issues,
+which the app may later use for community communication, not content.
 
 The Doveletter is published to a private GitHub repository that only subscribers can read, so the
 reader connects a GitHub account (OAuth device flow) before any content can load. This is an
@@ -41,7 +42,7 @@ reading surface is calm and uncluttered. Long-form prose gets room to breathe an
 measure. Chrome retreats so the writing is the loudest thing on the screen.
 
 The signature is **monospace as voice**. A monospace face, the typeface of code, carries every label
-that orients a developer: the issue a piece belongs to, how long it takes to read, when it landed,
+that orients a developer: the publication a piece belongs to, how long it takes to read, when it landed,
 the topics on it, the counts on the profile, and of course code itself. Monospace is native to this
 audience. It says *this was made for people who read code* without a single illustration. The
 reading body, by contrast, is a clean sans, because legibility over a long measure wins for the
@@ -61,7 +62,7 @@ neutrals. This section defines the *roles* those tokens play in the app.
   section, the leading rule of a section header, the unread marker, the active state of a toggle or
   filter chip, the save active state, the reading progress indicator, and a filled primary button.
   It is also, deliberately, the **surface fill of a single hero stat card** per scrollable region,
-  for example an "issues read" or reading streak hero. Inside such a card the content colour is
+  for example an "publications read" or reading streak hero. Inside such a card the content colour is
   `onPrimary`, demoted text drops to `onPrimary` at about 0.75 alpha, any divider drops to
   `onPrimary` at about 0.25 alpha, and a call to action inside it steps down a tier (tonal or
   elevated) so it does not vanish into the fill. Beyond that one hero, primary is **not** a
@@ -73,7 +74,7 @@ neutrals. This section defines the *roles* those tokens play in the app.
   the title of an entry the reader has **already read**. Use it to push information back without
   losing legibility.
 - **Surface / background.** The reading canvas. Plain. Long-form prose lives directly on it.
-- **Surface-container, -high, -highest.** Elevated tiles, issue and entry cards, code blocks, and
+- **Surface-container, -high, -highest.** Elevated tiles, publication and entry cards, code blocks, and
   grouped sections. Step *up* the container shade to express grouping or focus. Elevation is
   communicated by tone, not by drop shadows.
 - **Surface-container-lowest.** Reserved for modal sheets and overlays that sit *above* the page.
@@ -82,18 +83,18 @@ neutrals. This section defines the *roles* those tokens play in the app.
 - **Secondary container.** The fill for **topic chips**: a selected topic facet swaps to
   `secondaryContainer` / `onSecondaryContainer`, an idle one sits on `surfaceContainerHigh` /
   `onSurface`, and a read-only topic tag uses the idle shade.
-- **Inverse-primary.** Small attention markers on chrome, for example a "new issue" dot on a tab.
+- **Inverse-primary.** Small attention markers on chrome, for example a "new publication" dot on a tab.
 - **Error / on-error.** Destructive and validation states only.
 
 **Reading specific registers.**
 
 - **Unread vs read.** Unread is the loud state: the entry title sits at full `onSurface` weight with
   a small primary unread dot at its leading edge. Once read, the title demotes to `onSurfaceVariant`
-  and the dot disappears, so the list visibly thins out as the reader works through an issue, which
+  and the dot disappears, so the list visibly thins out as the reader works through a publication, which
   is the point.
 - **Code register.** Inline code is set in the mono `code` role on a faint `surfaceContainerHigh`
   wash. A fenced code block is a full `surfaceContainerHigh` card with the same mono face. Code is
-  never recoloured for syntax in chrome contexts such as issue previews. Only the dedicated reading
+  never recoloured for syntax in chrome contexts such as publication previews. Only the dedicated reading
   view may apply syntax tinting, and even there it leans on the scheme's tones, not a rainbow
   palette.
 
@@ -109,7 +110,7 @@ Two type families carry the system, split by voice. They are implemented in
   entry titles, and all Material component chrome such as top bar titles and button and navigation
   labels. It is set roman. Legibility over a long measure is its whole job.
 - **Mono** (`monoFontFamily`). The developer-native accent. Everything that orients rather than
-  reads: kickers and issue labels, the metadata strip (reading time, date, issue number), topics,
+  reads: kickers and publication labels, the metadata strip (reading time, date, publication number), topics,
   inline and block code, and stat numerals. Mono is monospaced by nature, so counts and aligned
   columns stay steady without a tabular-figures feature.
 
@@ -128,25 +129,25 @@ Two parallel scales coexist:
 
 | Role           | Where it goes                                                                    | Family, character                     |
 | -------------- | -------------------------------------------------------------------------------- | ------------------------------------- |
-| `kicker`       | All-caps issue or section label over a headline (the issue number, "IN THIS ISSUE", a section eyebrow), and the accent over a hero stat | Mono, wide tracking, medium |
+| `kicker`       | All-caps publication or section label over a headline (the publication number, "IN THIS PUBLICATION", a section eyebrow), and the accent over a hero stat | Mono, wide tracking, medium |
 | `kickerSmall`  | Same role, packed inside cards and rows                                          | Mono, tighter                         |
 | `pageTitle`    | The screen's primary title rendered *inside* the scrolling page, not the top bar slot which uses Material `titleLarge` | Sans, bold, large |
-| `headline`     | An entry or issue headline in a hero or featured card                            | Sans, bold, tight leading             |
+| `headline`     | An entry or publication headline in a hero or featured card                            | Sans, bold, tight leading             |
 | `headlineSmall`| Subsection or modal headlines                                                    | Sans, semibold                        |
-| `articleTitle` | The title of an entry in an issue list or feed row                               | Sans, semibold                        |
+| `articleTitle` | The title of an entry in a publication list or feed row                               | Sans, semibold                        |
 | `feedTitle`    | A smaller card title (compact rows, related entries)                             | Sans, semibold                        |
 | `bodyLarge`    | The lead paragraph or standfirst of an entry                                     | Sans, larger, generous leading        |
 | `body`         | Running prose, the reading role                                                  | Sans, comfortable leading             |
 | `bodySmall`    | Captions, secondary descriptions                                                 | Sans                                  |
-| `meta`         | The metadata strip, for example `12 min · Issue 142 · 3d ago`                    | Mono, small                           |
+| `meta`         | The metadata strip, for example `12 min · Publication 142 · 3d ago`                    | Mono, small                           |
 | `metaStrong`   | Emphasised metadata such as an unread count or "NEW"                             | Mono, medium                          |
 | `code`         | Inline code and fenced code blocks                                               | Mono                                  |
-| `statNumber`   | A numeric stat such as issues read, entries saved, or a day streak              | Mono, oversize                        |
+| `statNumber`   | A numeric stat such as publications read, entries saved, or a day streak              | Mono, oversize                        |
 | `pullQuote`    | A highlighted passage pulled from an entry                                        | Sans, italic, medium                  |
 
 Mono is a deliberate signal. It marks the chrome of a reading tool. Reserve it for the roles above
 (kicker, meta, code, stat). If a paragraph of prose ever wants mono, that is a sign it is actually
-code and belongs in the `code` role. Conversely, never set an issue label or a reading time in the
+code and belongs in the `code` role. Conversely, never set a publication label or a reading time in the
 sans, because the mono voice is half the brand.
 
 Never inline an ad hoc `TextStyle`. Pick the closest reader or Material role and `.copy(...)` only
@@ -239,7 +240,7 @@ settings sub-page, where back navigation or trailing actions are needed.
 A content section is composed of:
 
 1. **Section rule** (optional). The 28×3 dp primary bar in the gutter.
-2. **Kicker.** A short all-caps mono label in primary colour (the section or issue label).
+2. **Kicker.** A short all-caps mono label in primary colour (the section or publication label).
 3. **Headline.** The human readable title in the reading sans, on-surface.
 4. **Body.** The section's content: a vertical list of entries, a horizontal carousel, or a single
    block.
@@ -250,13 +251,13 @@ clipped, technical), the headline gives the readable title, the body delivers.
 
 ### 3.3 Hero region
 
-A hero opens a screen with a single dominant element: the latest issue, a featured entry, or a stat.
-A featured hero pairs a `kicker` (the issue label) with the `headline` and a `meta` line, over the
+A hero opens a screen with a single dominant element: the latest publication, a featured entry, or a stat.
+A featured hero pairs a `kicker` (the publication label) with the `headline` and a `meta` line, over the
 plain-page surface. A stat hero is the one primary filled card per region (§2.1), built around a
 `statNumber`. Hero regions sit on the page surface, not on a container. They are part of the page,
 not a tile within it.
 
-### 3.4 Issue cards and entry rows
+### 3.4 Publication cards and entry rows
 
 The vertical **list** is the default for a collection of entries. A horizontal carousel is the
 exception, used only for a curated strip such as "saved for later". Cards reserve the height of every
@@ -265,14 +266,14 @@ optional row they may show (topics, save state) so the list does not reflow as d
 Entry row anatomy (leading-to-trailing, the default compact row):
 
 1. Optional leading thumbnail (the entry's image), small radius, no shadow.
-2. **Kicker line.** `kickerSmall` mono, the issue label, for example `ISSUE 142`.
+2. **Kicker line.** `kickerSmall` mono, the publication label, for example `WEEKLY LETTER #142`.
 3. **Entry title.** `articleTitle`, max two lines, full `onSurface` when unread or demoted when read,
    with a leading primary unread dot while unread.
 4. **Meta strip.** `meta` mono: reading time, relative date, joined with `·`.
 5. Optional trailing **save** affordance (the bookmark toggle) and an optional topic chip.
 
-An **issue card** promotes the same anatomy for a whole edition: a larger block carrying the issue
-`kicker` (`ISSUE 142`), its date, the `headline` (the issue title or its first entry), and a `meta`
+An **publication card** promotes the same anatomy for a whole edition: a larger block carrying the publication
+`kicker` (`WEEKLY LETTER #142`), its date, the `headline` (the publication title or its first entry), and a `meta`
 count of entries and unread items. A featured entry card uses the `headline` role and a larger
 thumbnail. Horizontal carousel cards are fixed width and height and never paint an overflow
 affordance. The rightmost card clipped against the 24 dp gutter is itself the "there is more" cue. Do
@@ -281,9 +282,9 @@ not add an edge fade, chevron, or page indicator.
 ### 3.5 Reading view
 
 The reading view is the system's reason to exist, so it gets its own rules. It serves both a single
-entry and a whole issue (a stack of entries under one issue header).
+entry and a whole publication (a stack of entries under one publication header).
 
-- It opens with the **issue kicker** (`ISSUE 142`), the `headline`, the `meta` strip, and an optional
+- It opens with the **publication kicker** (`WEEKLY LETTER #142`), the `headline`, the `meta` strip, and an optional
   hero image, then the **lead paragraph** in `bodyLarge`, then the body in `body`.
 - Body prose holds a comfortable measure (24 dp gutters, never edge to edge), separates paragraphs by
   a full line, and renders on the plain-page surface.
@@ -333,13 +334,16 @@ blocks live in `core/presentation/widget/`, theming in `core/presentation/theme/
   Selected uses `secondaryContainer` / `onSecondaryContainer` with a semibold label, idle uses
   `surfaceContainerHigh` / `onSurface`. Pass `onClick` for an interactive chip such as a filter, omit
   it for a read-only tag. Reach for it instead of hand-rolling a `Surface` and `Text` pill.
-- **Issue card and entry row.** The §3.4 anatomy, the workhorse of every list surface. Reserves its
+- **Publication card and entry row.** The §3.4 anatomy, the workhorse of every list surface. Reserves its
   optional rows so the list never reflows.
 - **Save (bookmark) toggle.** An icon toggle that saves an entry for later. Idle is the outline
   bookmark on `onSurfaceVariant`, active is the filled bookmark on `primary`, with a single pulse on
   commit and a *commit* haptic. The active filled glyph is the one sanctioned filled icon (§2.6).
 - **Code block.** A `surfaceContainerHigh` panel in the mono `code` role, horizontally scrollable,
-  small radius. The canonical way to show a snippet in the reading view. Never wrap code to fit.
+  small radius. The canonical way to show a snippet in the reading view. Never wrap code to fit. In
+  the reading view it carries restrained syntax tinting drawn from scheme tones (keywords in
+  `primary`, strings in `tertiary`, numbers in `secondary`, comments in `onSurfaceVariant`), never a
+  rainbow palette (§2.1).
 - **Reading progress indicator.** A thin wavy primary bar tracking scroll in the reading view. The
   only progress chrome allowed to overlay the reading surface.
 - **Unread marker.** The small leading primary dot on an unread entry title. Removed on read.
@@ -356,18 +360,18 @@ blocks live in `core/presentation/widget/`, theming in `core/presentation/theme/
 
 Recurring recipes that compose the primitives above.
 
-- **The archive.** A vertical list of issue cards or entry rows (§3.4) under a section header (§3.2).
+- **The archive.** A vertical list of publication cards or entry rows (§3.4) under a section header (§3.2).
   The default surface of the app. Sorts newest-first. Supports an optional topic filter strip (below)
   and pull-to-refresh. Unread items lead loud, read items demote in place (§2.1).
-- **Latest issue hero.** The Home tab opens on the newest issue as a hero (§3.3): its kicker, its
-  headline, a `meta` count of unread entries, and a primary action into the reading view. Past issues
+- **Latest publication hero.** The Home tab opens on the newest publication as a hero (§3.3): its kicker, its
+  headline, a `meta` count of unread entries, and a primary action into the reading view. Past publications
   follow below as the archive.
 - **Topic filter strip.** A horizontally scrolling `Row` of pill chips directly above the archive to
   scope it by topic (Compose, Coroutines, Tooling, and so on). The selected chip swaps to
   `secondaryContainer`. Always include a leading "All" chip that clears the filter. A larger topic
   picker lives in a modal sheet (§3.6). The strip shows the quick facets. Do not apply the carousel
   page-edge cue here, because a filter strip is a control, not a peek affordance.
-- **Issue and entry reading.** The §3.5 surface, pushed onto the stack from any list row via a
+- **Publication and entry reading.** The §3.5 surface, pushed onto the stack from any list row via a
   Material top bar carrying back, the save toggle, and an overflow (share, open original, mark read or
   unread). Marking read here fires the commit choreography (§2.5).
 - **Mark as read.** The system's core commit. Triggered by opening an entry (automatic), a swipe
@@ -379,13 +383,13 @@ Recurring recipes that compose the primitives above.
   out. Saved is a plain list of the same rows, scopable by topic like the archive.
 - **Adaptive empty state.** When a root surface is empty, surface the next best content rather than a
   static "nothing here" panel. An empty Home with nothing unread surfaces a "Catch up" strip of
-  recently read or saved entries. An empty Saved surfaces the latest issue. Pair with the empty state
+  recently read or saved entries. An empty Saved surfaces the latest publication. Pair with the empty state
   glyph and an encouragement headline. Do not stack three carousels. The empty state is a moment of
   orientation, not a discovery surface.
 - **Editorial section.** Section rule (optional), then kicker, then headline, then body. The default
   way to introduce any region (§3.2).
 - **Hero stat.** A single oversize `statNumber` with a `kicker` unit label above it and an italic
-  caption beneath. Used for profile counters such as issues read, day streak, and entries saved. The
+  caption beneath. Used for profile counters such as publications read, day streak, and entries saved. The
   unit is named in the kicker, never trailed beside the numeral. Live bound numbers animate between
   values rather than snapping.
 - **Tonal grouping.** When two regions must feel distinct on one page, step the container shade rather
@@ -402,7 +406,7 @@ Walk this list before reaching for novelty when building a new surface.
 - **Need to introduce a region of content?** Section header (kicker and headline), §3.2.
 - **Need to mark a region as elevated relative to its neighbour?** Step the container shade. Do not
   add a shadow.
-- **Need to label an issue, a reading time, a count, or any chrome metadata?** Use the mono scale
+- **Need to label a publication, a reading time, a count, or any chrome metadata?** Use the mono scale
   (`kicker`, `meta`, `metaStrong`, `statNumber`). Reading prose never wears mono. Chrome metadata
   never wears the sans.
 - **Need to show a snippet of code?** The `code` role, an inline wash or a fenced

@@ -9,6 +9,7 @@ val homeModule = module {
     factory {
         HomeScreenModel(
             appDispatchers = get(),
+            getPublicationsUseCase = get(),
             flows = emptyList(),
         )
     }

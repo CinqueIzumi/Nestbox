@@ -49,6 +49,11 @@ android {
         compose = true
         buildConfig = true
     }
+    testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
+        }
+    }
 }
 
 dependencies {
@@ -64,6 +69,9 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.core)
     testImplementation(libs.junit)
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
+    testRuntimeOnly(libs.junit.vintage.engine)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -90,4 +98,7 @@ dependencies {
 
     // Persistence
     implementation(libs.androidx.datastore.preferences)
+
+    // Markdown parsing
+    implementation(libs.jetbrains.markdown)
 }
