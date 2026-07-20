@@ -26,7 +26,8 @@ Maven Central, docs vendored at the pinned version under [`rhaydus/`](rhaydus/):
 | Artifact | What Nestbox takes from it |
 |---|---|
 | `nl.rhaydus:toad` | The whole TOAD runtime — `ToadScreenModel`, `UiState`/`UiAction`/`UiEvent`, `Collector`, `ActionDependencies`, `ActionScope`, `LocalVariables` (package `nl.rhaydus.toad`). |
-| `nl.rhaydus:core-common` | `AppDispatchers`, `runCatchingCancellable` (package `nl.rhaydus.common`). |
+| `nl.rhaydus:core-common` | `AppDispatchers`, `runCatchingCancellable`, the `AppLog` logging facade — installed once in `NestboxApplication` (package `nl.rhaydus.common`). |
+| `nl.rhaydus:core-platform` | `SecureStorage` / `AndroidSecureStorage`, the Keystore-backed store the GitHub token lives in (package `nl.rhaydus.platform`). |
 | `nl.rhaydus:designsystem-core` | `RhaydusTheme` (the Material 3 Expressive scaffold `NestboxTheme` wraps), `BottomBarScaffold` + `LocalBottomBarPadding` / `rememberBottomBarPadding` (package `nl.rhaydus.designsystem.*`). |
 
 **Reuse-first:** before hand-rolling a component, modifier, util, or layout primitive, check
@@ -131,8 +132,7 @@ core/auth/
 ├── data/
 │   ├── model/{DeviceCodeResponse,AccessTokenResponse,GitHubUserResponse}.kt   # DTOs
 │   ├── datasource/GitHubAuthRemoteDataSource.kt   # interface + Impl: GitHub device-flow endpoints
-│   ├── datasource/TokenLocalDataSource.kt         # interface + Impl: encrypted DataStore persistence
-│   ├── security/CryptoManager.kt                  # Keystore AES/GCM helper
+│   ├── datasource/TokenLocalDataSource.kt         # interface + Impl: the token, over SecureStorage
 │   └── repository/AccountRepositoryImpl.kt        # implements the domain interface
 └── di/AuthModule.kt                           # binds interfaces to impls, exposes use cases
 ```

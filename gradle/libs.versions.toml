@@ -21,7 +21,6 @@ voyager = "1.1.0-beta02"
 koinVersion = "3.5.3"
 ktor = "3.0.3"
 kotlinxSerialization = "1.7.3"
-datastore = "1.1.1"
 coreSplashscreen = "1.0.1"
 markdown = "0.7.5"
 
@@ -30,6 +29,7 @@ markdown = "0.7.5"
 # (see settings.gradle.kts); docs/rhaydus/ carries the capabilities index at the pinned version.
 rhaydus-toad = { group = "nl.rhaydus", name = "toad", version.ref = "rhaydusFoundation" }
 rhaydus-core-common = { group = "nl.rhaydus", name = "core-common", version.ref = "rhaydusFoundation" }
+rhaydus-core-platform = { group = "nl.rhaydus", name = "core-platform", version.ref = "rhaydusFoundation" }
 rhaydus-designsystem-core = { group = "nl.rhaydus", name = "designsystem-core", version.ref = "rhaydusFoundation" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -61,7 +61,6 @@ ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.r
 ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
-androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 jetbrains-markdown = { group = "org.jetbrains", name = "markdown", version.ref = "markdown" }
 

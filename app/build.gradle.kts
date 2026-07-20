@@ -61,6 +61,7 @@ dependencies {
     // nl.rhaydus foundation
     implementation(libs.rhaydus.toad)
     implementation(libs.rhaydus.core.common)
+    implementation(libs.rhaydus.core.platform)
     implementation(libs.rhaydus.designsystem.core)
 
     implementation(libs.androidx.core.ktx)
@@ -101,9 +102,6 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.kotlinx.serialization.json)
-
-    // Persistence
-    implementation(libs.androidx.datastore.preferences)
 
     // Markdown parsing
     implementation(libs.jetbrains.markdown)

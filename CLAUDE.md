@@ -40,12 +40,17 @@ This project consumes the nl.rhaydus foundation. Capabilities index:
 **Consumed modules** (pinned at `0.3.1` via `rhaydusFoundation` in `gradle/libs.versions.toml`):
 - `libs.rhaydus.toad` - the entire TOAD runtime, imported from `nl.rhaydus.toad`. Nestbox has no
   local copy; do not recreate one.
-- `libs.rhaydus.core.common` - `AppDispatchers`, `runCatchingCancellable` (`nl.rhaydus.common`).
+- `libs.rhaydus.core.common` - `AppDispatchers`, `runCatchingCancellable`, and `AppLog`, the logging
+  facade. `AppLog.install(...)` runs in `NestboxApplication`; log through it, never `android.util.Log`
+  or `println`.
+- `libs.rhaydus.core.platform` - `SecureStorage` / `AndroidSecureStorage`, which custodies the GitHub
+  access token (`nl.rhaydus.platform`).
 - `libs.rhaydus.designsystem.core` - `RhaydusTheme`, `BottomBarScaffold`, `LocalBottomBarPadding` /
   `rememberBottomBarPadding` (`nl.rhaydus.designsystem.*`).
 
-Not consumed (yet): `designsystem-editorial`, `designsystem-image`, `core-platform`, `offline-sync`,
-`ktlint-rules`, `detekt-rules`. The foundation's shared `nl.rhaydus:catalog` is also not consumed -
+Not consumed (yet): `designsystem-editorial` (deliberately - the app's visual design is not settled,
+so it keeps its own widgets for now), `designsystem-image`, `offline-sync`. The foundation's shared
+`nl.rhaydus:catalog` is also not consumed -
 Nestbox deliberately pins the androidx/Compose stack ahead of the foundation's set, so `libs` stays
 the single catalog here (`settings.gradle.kts` records how to add it back).
 

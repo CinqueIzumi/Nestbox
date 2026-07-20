@@ -1,13 +1,6 @@
 package nl.rhaydus.nestbox.core.auth.data.datasource
 
-import android.content.Context
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
-import kotlinx.coroutines.flow.first
-import nl.rhaydus.nestbox.core.auth.data.security.CryptoManager
-
-private val Context.authDataStore by preferencesDataStore(name = "github_auth")
+import nl.rhaydus.platform.SecureStorage
 
 interface TokenLocalDataSource {
     suspend fun saveToken(token: String)
@@ -17,23 +10,26 @@ interface TokenLocalDataSource {
     suspend fun clear()
 }
 
+/**
+ * The GitHub access token, custodied by the foundation's [SecureStorage]: the ciphertext lives in an
+ * app-private file and the AES key in the Android Keystore. Discarding ciphertext that no longer
+ * decrypts (a rotated or invalidated Keystore key) is [SecureStorage]'s job, so a failed read simply
+ * reads as "no token" here and the user re-links.
+ */
 class TokenLocalDataSourceImpl(
-    private val context: Context,
-    private val crypto: CryptoManager,
+    private val secureStorage: SecureStorage,
 ) : TokenLocalDataSource {
-    private val tokenKey = stringPreferencesKey("github_token")
 
-    override suspend fun saveToken(token: String) {
-        val encrypted = crypto.encrypt(token)
-        context.authDataStore.edit { prefs -> prefs[tokenKey] = encrypted }
-    }
+    override suspend fun saveToken(token: String) = secureStorage.write(
+        key = TOKEN_KEY,
+        value = token,
+    )
 
-    override suspend fun getToken(): String? {
-        val stored = context.authDataStore.data.first()[tokenKey] ?: return null
-        return runCatching { crypto.decrypt(stored) }.getOrNull()
-    }
+    override suspend fun getToken(): String? = secureStorage.read(TOKEN_KEY)
 
-    override suspend fun clear() {
-        context.authDataStore.edit { prefs -> prefs.remove(tokenKey) }
+    override suspend fun clear() = secureStorage.delete(TOKEN_KEY)
+
+    private companion object {
+        const val TOKEN_KEY = "github_token"
     }
 }
