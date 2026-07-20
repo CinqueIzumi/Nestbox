@@ -4,12 +4,14 @@
     <style name="Theme.Nestbox" parent="android:Theme.Material.Light.NoActionBar" />
 
     <!-- Android 12+ splash, backported via androidx.core:core-splashscreen.
-         The dove mark on the warm reading-room ground; hands off to Theme.Nestbox. -->
-    <style name="Theme.Nestbox.Starting" parent="Theme.SplashScreen">
+         The dove mark on the warm reading-room ground; hands off to Theme.Nestbox.
+         Everything the compat library backports lives here; the platform-only branding image is
+         added on top in values-v31. -->
+    <style name="Base.Theme.Nestbox.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/splash_background</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
-        <!-- Wordmark at the bottom; cream night variant via drawable-night-*. -->
-        <item name="android:windowSplashScreenBrandingImage">@drawable/ic_splash_branding</item>
         <item name="postSplashScreenTheme">@style/Theme.Nestbox</item>
     </style>
+
+    <style name="Theme.Nestbox.Starting" parent="Base.Theme.Nestbox.Starting" />
 </resources>

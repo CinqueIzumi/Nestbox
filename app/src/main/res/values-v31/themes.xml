@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- The branding image is a platform splash feature with no compat backport, so it is only
+         declared from API 31. Below that the base theme applies unchanged and no wordmark shows.
+         Wordmark at the bottom; cream night variant via drawable-night-*. -->
+    <style name="Theme.Nestbox.Starting" parent="Base.Theme.Nestbox.Starting">
+        <item name="android:windowSplashScreenBrandingImage">@drawable/ic_splash_branding</item>
+    </style>
+</resources>
