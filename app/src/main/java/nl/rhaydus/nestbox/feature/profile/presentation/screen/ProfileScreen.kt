@@ -187,7 +187,8 @@ object ProfileScreen : Screen {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "The Doveletter lives in a private repository open to its subscribers. Sign in with the GitHub account that has access to it to load the latest issues.",
+                text = "The Doveletter lives in a private repository open to its subscribers. " +
+                    "Sign in with the GitHub account that has access to it to load the latest issues.",
                 style = MaterialTheme.readerTypography.body,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -244,7 +245,8 @@ object ProfileScreen : Screen {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Open GitHub, paste the code above, and approve access. We check automatically when you return. Tap Check again if you approved on another device.",
+                text = "Open GitHub, paste the code above, and approve access. We check " +
+                    "automatically when you return. Tap Check again if you approved on another device.",
                 style = MaterialTheme.readerTypography.body,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

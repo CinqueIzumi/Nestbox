@@ -13,28 +13,19 @@ class PublicationMarkdownMapper {
         )
     }
 
+    // The preview is the publication's first prose paragraph, collapsed onto one line.
     fun extractPreview(markdown: String): String {
-        val paragraph = mutableListOf<String>()
+        // Headings are never part of the preview, wherever they sit - dropping them first means a
+        // heading between two prose lines doesn't split the paragraph.
+        val prose = markdown.lineSequence()
+            .map { it.trim() }
+            .filterNot { it.startsWith("#") }
 
-        for (raw in markdown.lineSequence()) {
-            val line = raw.trim()
-
-            if (line.startsWith("#")) {
-                continue
-            }
-
-            if (line.isEmpty()) {
-                if (paragraph.isEmpty()) {
-                    continue
-                }
-
-                break
-            }
-
-            paragraph += line
-        }
-
-        return paragraph.joinToString(separator = " ")
+        // Blank lines before the paragraph are padding; the first blank line after it starts ends it.
+        return prose
+            .dropWhile { it.isEmpty() }
+            .takeWhile { it.isNotEmpty() }
+            .joinToString(separator = " ")
     }
 
     // Drops the header line; the reading view renders that metadata from its own styled header.

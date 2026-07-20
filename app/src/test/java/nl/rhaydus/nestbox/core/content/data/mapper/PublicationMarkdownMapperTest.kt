@@ -65,6 +65,46 @@ class PublicationMarkdownMapperTest {
                 preview,
             )
         }
+
+        @Test
+        fun `keeps the paragraph whole when a heading sits between two prose lines`() {
+            // ----- Arrange -----
+            val markdown = """
+                First line of the intro
+                ## Section
+                second line of the intro.
+
+                Later paragraph.
+            """.trimIndent()
+
+            // ----- Act -----
+            val preview = mapper.extractPreview(markdown)
+
+            // ----- Assert -----
+            assertEquals(
+                "First line of the intro second line of the intro.",
+                preview,
+            )
+        }
+
+        @Test
+        fun `returns empty when the markdown holds no prose`() {
+            // ----- Arrange -----
+            val markdown = """
+                ## #1 2026-06-12 Weekly
+
+                ## Section
+            """.trimIndent()
+
+            // ----- Act -----
+            val preview = mapper.extractPreview(markdown)
+
+            // ----- Assert -----
+            assertEquals(
+                "",
+                preview,
+            )
+        }
     }
 
     @Nested

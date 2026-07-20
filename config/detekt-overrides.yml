@@ -1,0 +1,11 @@
+# Nestbox's overlay on the shared nl.rhaydus detekt baseline (config/detekt.yml, bundled inside
+# nl.rhaydus:detekt-rules). Only project-specific deviations belong here; anything that should hold for
+# every rhaydus app belongs upstream in the foundation instead.
+
+naming:
+  MemberNameEqualsClassName:
+    # A Voyager screen is an object whose render composable carries the screen's own name
+    # (`object HomeScreen : Screen { internal fun HomeScreen(state, runAction) }`). That is the
+    # documented convention here - see docs/code-style.md, "Compose" - not an accident, and it applies
+    # to every screen in the app.
+    active: false

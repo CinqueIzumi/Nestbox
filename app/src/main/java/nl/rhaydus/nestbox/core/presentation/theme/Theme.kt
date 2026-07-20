@@ -92,7 +92,6 @@ private val darkScheme = darkColorScheme(
 @Composable
 fun NestboxTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val colorScheme = if (darkTheme) darkScheme else lightScheme

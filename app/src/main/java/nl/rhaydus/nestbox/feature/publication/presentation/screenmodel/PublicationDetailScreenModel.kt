@@ -18,7 +18,13 @@ internal class PublicationDetailScreenModel(
     private val getPublicationUseCase: GetPublicationUseCase,
     private val markdownParser: MarkdownParser,
     flows: List<PublicationDetailCollector>,
-) : ToadScreenModel<PublicationDetailUiState, PublicationDetailEvent, PublicationDetailDependencies, PublicationDetailCollector, PublicationDetailLocalVariables>(
+) : ToadScreenModel<
+        PublicationDetailUiState,
+        PublicationDetailEvent,
+        PublicationDetailDependencies,
+        PublicationDetailCollector,
+        PublicationDetailLocalVariables,
+        >(
     initialState = PublicationDetailUiState(),
     initialLocalVariables = PublicationDetailLocalVariables(),
     initializers = flows,
