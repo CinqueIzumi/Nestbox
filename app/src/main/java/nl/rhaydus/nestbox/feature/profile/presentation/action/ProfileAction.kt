@@ -6,7 +6,7 @@ import nl.rhaydus.nestbox.feature.profile.presentation.state.ProfileLocalVariabl
 import nl.rhaydus.nestbox.feature.profile.presentation.state.ProfileUiState
 import nl.rhaydus.toad.UiAction
 
-sealed interface ProfileAction : UiAction<
+internal sealed interface ProfileAction : UiAction<
         ProfileDependencies,
         ProfileUiState,
         ProfileEvent,

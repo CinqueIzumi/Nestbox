@@ -12,12 +12,11 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class PublicationRepositoryImpl(
+internal class PublicationRepositoryImpl(
     private val remoteDataSource: PublicationRemoteDataSource,
     private val mapper: PublicationMarkdownMapper,
     private val ioDispatcher: CoroutineDispatcher,
 ) : PublicationRepository {
-
     override suspend fun getPublications(): List<PublicationSummary> = withContext(ioDispatcher) {
         val markdown = remoteDataSource.fetchPublicationMarkdown(NEWEST_ID)
         val preview = mapper.extractPreview(markdown)
@@ -66,18 +65,34 @@ class PublicationRepositoryImpl(
         )
 
         return shape.mapIndexed { index, (type, number) ->
-            Triple(type, number, shiftDate(latestDate, weeksBack = index))
+            Triple(
+                type,
+                number,
+                shiftDate(
+                    latestDate,
+                    weeksBack = index,
+                ),
+            )
         }
     }
 
     // Calendar/SimpleDateFormat rather than java.time, which would need core-library desugaring below API 26.
-    private fun shiftDate(date: String, weeksBack: Int): String {
-        val format = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+    private fun shiftDate(
+        date: String,
+        weeksBack: Int,
+    ): String {
+        val format = SimpleDateFormat(
+            "yyyy-MM-dd",
+            Locale.US,
+        )
         val parsed = runCatching { format.parse(date) }.getOrNull() ?: return date
 
         val calendar = Calendar.getInstance().apply {
             time = parsed
-            add(Calendar.DAY_OF_YEAR, -DAYS_PER_WEEK * weeksBack)
+            add(
+                Calendar.DAY_OF_YEAR,
+                -DAYS_PER_WEEK * weeksBack,
+            )
         }
 
         return format.format(calendar.time)

@@ -6,7 +6,7 @@ import nl.rhaydus.nestbox.feature.publication.presentation.state.PublicationDeta
 import nl.rhaydus.nestbox.feature.publication.presentation.state.PublicationDetailUiState
 import nl.rhaydus.toad.Collector
 
-sealed interface PublicationDetailCollector : Collector<
+internal sealed interface PublicationDetailCollector : Collector<
         PublicationDetailUiState,
         PublicationDetailEvent,
         PublicationDetailDependencies,

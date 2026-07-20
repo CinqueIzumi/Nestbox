@@ -6,7 +6,7 @@ import nl.rhaydus.nestbox.core.content.domain.usecase.GetPublicationUseCase
 import nl.rhaydus.nestbox.core.presentation.markdown.MarkdownParser
 import nl.rhaydus.toad.ActionDependencies
 
-class PublicationDetailDependencies(
+internal class PublicationDetailDependencies(
     override val coroutineScope: CoroutineScope,
     override val mainDispatcher: CoroutineDispatcher,
     val getPublicationUseCase: GetPublicationUseCase,

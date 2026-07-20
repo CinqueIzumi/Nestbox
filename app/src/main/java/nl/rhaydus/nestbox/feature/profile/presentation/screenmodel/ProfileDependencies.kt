@@ -8,7 +8,7 @@ import nl.rhaydus.nestbox.core.auth.domain.usecase.SignOutGitHubUseCase
 import nl.rhaydus.nestbox.core.auth.domain.usecase.StartGitHubAuthorizationUseCase
 import nl.rhaydus.toad.ActionDependencies
 
-class ProfileDependencies(
+internal class ProfileDependencies(
     override val coroutineScope: CoroutineScope,
     override val mainDispatcher: CoroutineDispatcher,
     val startGitHubAuthorizationUseCase: StartGitHubAuthorizationUseCase,

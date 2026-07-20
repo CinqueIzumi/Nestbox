@@ -18,7 +18,12 @@ class MarkdownParser {
 
         val blocks = mutableListOf<MarkdownBlock>()
 
-        root.children.forEach { node -> collectBlocks(node, markdown, depth = 0, into = blocks) }
+        root.children.forEach { node -> collectBlocks(
+            node,
+            markdown,
+            depth = 0,
+            into = blocks,
+        ) }
 
         return blocks
     }
@@ -32,24 +37,44 @@ class MarkdownParser {
         when (node.type) {
             in HEADING_LEVELS.keys -> {
                 val content = node.findChildOfType(MarkdownTokenTypes.ATX_CONTENT)
-                val inlines = content?.let { trimEnds(parseInlines(it, text)) }.orEmpty()
+                val inlines = content?.let { trimEnds(parseInlines(
+                    it,
+                    text,
+                ),) }.orEmpty()
 
-                into += MarkdownBlock.Heading(level = HEADING_LEVELS.getValue(node.type), inlines = inlines)
+                into += MarkdownBlock.Heading(
+                    level = HEADING_LEVELS.getValue(node.type),
+                    inlines = inlines,
+                )
             }
 
             MarkdownElementTypes.PARAGRAPH ->
-                into += MarkdownBlock.Paragraph(trimEnds(parseInlines(node, text)))
+                into += MarkdownBlock.Paragraph(trimEnds(parseInlines(
+                    node,
+                    text,
+                ),),)
 
             MarkdownElementTypes.UNORDERED_LIST, MarkdownElementTypes.ORDERED_LIST ->
                 node.children
                     .filter { it.type == MarkdownElementTypes.LIST_ITEM }
-                    .forEach { item -> collectListItem(item, text, depth, into) }
+                    .forEach { item -> collectListItem(
+                        item,
+                        text,
+                        depth,
+                        into,
+                    ) }
 
             MarkdownElementTypes.CODE_FENCE ->
-                into += parseCodeFence(node, text)
+                into += parseCodeFence(
+                    node,
+                    text,
+                )
 
             MarkdownElementTypes.BLOCK_QUOTE ->
-                into += MarkdownBlock.Quote(trimEnds(parseQuoteInlines(node, text)))
+                into += MarkdownBlock.Quote(trimEnds(parseQuoteInlines(
+                    node,
+                    text,
+                ),),)
 
             else -> Unit
         }
@@ -62,35 +87,67 @@ class MarkdownParser {
         into: MutableList<MarkdownBlock>,
     ) {
         val paragraph = item.children.firstOrNull { it.type == MarkdownElementTypes.PARAGRAPH }
-        val inlines = trimEnds(parseInlines(paragraph ?: item, text))
+        val inlines = trimEnds(parseInlines(
+            paragraph ?: item,
+            text,
+        ),)
 
-        into += MarkdownBlock.BulletItem(depth = depth, inlines = inlines)
+        into += MarkdownBlock.BulletItem(
+            depth = depth,
+            inlines = inlines,
+        )
 
         item.children
             .filter { it.type == MarkdownElementTypes.UNORDERED_LIST || it.type == MarkdownElementTypes.ORDERED_LIST }
             .forEach { nested ->
                 nested.children
                     .filter { it.type == MarkdownElementTypes.LIST_ITEM }
-                    .forEach { child -> collectListItem(child, text, depth + 1, into) }
+                    .forEach { child -> collectListItem(
+                        child,
+                        text,
+                        depth + 1,
+                        into,
+                    ) }
             }
     }
 
-    private fun parseCodeFence(node: ASTNode, text: String): MarkdownBlock.CodeBlock {
+    private fun parseCodeFence(
+        node: ASTNode,
+        text: String,
+    ): MarkdownBlock.CodeBlock {
         val raw = node.getTextInNode(text).toString()
 
         // Slice the raw text between the opening and closing fence lines so interior blank lines
         // survive (the per-line CODE_FENCE_CONTENT tokens drop them).
-        val language = raw.substringBefore('\n').trimStart('`', '~').trim().ifEmpty { null }
-        val code = raw.substringAfter('\n', "").substringBeforeLast('\n', "")
+        val language = raw.substringBefore('\n').trimStart(
+            '`',
+            '~',
+        ).trim().ifEmpty { null }
+        val code = raw.substringAfter(
+            '\n',
+            "",
+        ).substringBeforeLast(
+            '\n',
+            "",
+        )
 
-        return MarkdownBlock.CodeBlock(code = code, language = language)
+        return MarkdownBlock.CodeBlock(
+            code = code,
+            language = language,
+        )
     }
 
-    private fun parseQuoteInlines(node: ASTNode, text: String): List<MarkdownInline> {
+    private fun parseQuoteInlines(
+        node: ASTNode,
+        text: String,
+    ): List<MarkdownInline> {
         val paragraphs = node.children.filter { it.type == MarkdownElementTypes.PARAGRAPH }
 
         if (paragraphs.isEmpty()) {
-            return parseInlines(node, text)
+            return parseInlines(
+                node,
+                text,
+            )
         }
 
         val inlines = mutableListOf<MarkdownInline>()
@@ -100,28 +157,46 @@ class MarkdownParser {
                 inlines += MarkdownInline.Text(" ")
             }
 
-            inlines += parseInlines(paragraph, text)
+            inlines += parseInlines(
+                paragraph,
+                text,
+            )
         }
 
         return inlines
     }
 
-    private fun parseInlines(node: ASTNode, text: String): List<MarkdownInline> {
+    private fun parseInlines(
+        node: ASTNode,
+        text: String,
+    ): List<MarkdownInline> {
         val out = mutableListOf<MarkdownInline>()
 
         node.children.forEach { child ->
             when (child.type) {
                 MarkdownElementTypes.STRONG ->
-                    out += MarkdownInline.Bold(parseInlines(child, text))
+                    out += MarkdownInline.Bold(parseInlines(
+                        child,
+                        text,
+                    ),)
 
                 MarkdownElementTypes.EMPH ->
-                    out += parseInlines(child, text)
+                    out += parseInlines(
+                        child,
+                        text,
+                    )
 
                 MarkdownElementTypes.CODE_SPAN ->
-                    out += MarkdownInline.Code(codeSpanText(child, text))
+                    out += MarkdownInline.Code(codeSpanText(
+                        child,
+                        text,
+                    ),)
 
                 MarkdownElementTypes.INLINE_LINK ->
-                    parseLink(child, text)?.let { out += it }
+                    parseLink(
+                        child,
+                        text,
+                    )?.let { out += it }
 
                 MarkdownTokenTypes.EOL, MarkdownTokenTypes.WHITE_SPACE ->
                     out += MarkdownInline.Text(" ")
@@ -132,7 +207,10 @@ class MarkdownParser {
                     if (child.children.isEmpty()) {
                         out += MarkdownInline.Text(child.getTextInNode(text).toString())
                     } else {
-                        out += parseInlines(child, text)
+                        out += parseInlines(
+                            child,
+                            text,
+                        )
                     }
             }
         }
@@ -141,24 +219,39 @@ class MarkdownParser {
     }
 
     // The marker tokens (backticks) sit as children alongside the content, so drop them and keep the rest.
-    private fun codeSpanText(node: ASTNode, text: String): String =
+    private fun codeSpanText(
+        node: ASTNode,
+        text: String,
+    ): String =
         node.children
             .filter { it.type != MarkdownTokenTypes.BACKTICK }
             .joinToString(separator = "") { it.getTextInNode(text).toString() }
             .trim()
 
-    private fun parseLink(node: ASTNode, text: String): MarkdownInline.Link? {
+    private fun parseLink(
+        node: ASTNode,
+        text: String,
+    ): MarkdownInline.Link? {
         val destination = node.findChildOfType(MarkdownElementTypes.LINK_DESTINATION) ?: return null
 
-        val url = destination.getTextInNode(text).toString().trim().removeSurrounding("<", ">")
+        val url = destination.getTextInNode(text).toString().trim().removeSurrounding(
+            "<",
+            ">",
+        )
         val label = node.findChildOfType(MarkdownElementTypes.LINK_TEXT)
             ?.getTextInNode(text)
             ?.toString()
             ?.trim()
-            ?.removeSurrounding("[", "]")
+            ?.removeSurrounding(
+                "[",
+                "]",
+            )
             ?: url
 
-        return MarkdownInline.Link(inlines = listOf(MarkdownInline.Text(label)), url = url)
+        return MarkdownInline.Link(
+            inlines = listOf(MarkdownInline.Text(label)),
+            url = url,
+        )
     }
 
     private fun coalesce(inlines: List<MarkdownInline>): List<MarkdownInline> {

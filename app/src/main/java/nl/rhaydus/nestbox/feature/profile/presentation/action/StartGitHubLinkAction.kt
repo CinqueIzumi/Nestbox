@@ -7,7 +7,7 @@ import nl.rhaydus.nestbox.feature.profile.presentation.state.ProfileLocalVariabl
 import nl.rhaydus.nestbox.feature.profile.presentation.state.ProfileUiState
 import nl.rhaydus.toad.ActionScope
 
-data object StartGitHubLinkAction : ProfileAction {
+internal data object StartGitHubLinkAction : ProfileAction {
     override suspend fun execute(
         dependencies: ProfileDependencies,
         scope: ActionScope<ProfileUiState, ProfileEvent, ProfileLocalVariables>,

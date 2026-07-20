@@ -16,10 +16,9 @@ interface TokenLocalDataSource {
  * decrypts (a rotated or invalidated Keystore key) is [SecureStorage]'s job, so a failed read simply
  * reads as "no token" here and the user re-links.
  */
-class TokenLocalDataSourceImpl(
+internal class TokenLocalDataSourceImpl(
     private val secureStorage: SecureStorage,
 ) : TokenLocalDataSource {
-
     override suspend fun saveToken(token: String) = secureStorage.write(
         key = TOKEN_KEY,
         value = token,

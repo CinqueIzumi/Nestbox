@@ -10,7 +10,7 @@ import nl.rhaydus.toad.ActionScope
 
 // Dispatched on every screen ON_RESUME. While linking it polls GitHub once (the user has just
 // returned from approving in the browser); on first show it restores any previously stored link.
-data object CheckGitHubAuthorizationAction : ProfileAction {
+internal data object CheckGitHubAuthorizationAction : ProfileAction {
     override suspend fun execute(
         dependencies: ProfileDependencies,
         scope: ActionScope<ProfileUiState, ProfileEvent, ProfileLocalVariables>,

@@ -6,7 +6,7 @@ import nl.rhaydus.nestbox.feature.publication.presentation.state.PublicationDeta
 import nl.rhaydus.nestbox.feature.publication.presentation.state.PublicationDetailUiState
 import nl.rhaydus.toad.UiAction
 
-sealed interface PublicationDetailAction : UiAction<
+internal sealed interface PublicationDetailAction : UiAction<
         PublicationDetailDependencies,
         PublicationDetailUiState,
         PublicationDetailEvent,

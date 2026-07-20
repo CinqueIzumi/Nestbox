@@ -40,8 +40,8 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import nl.rhaydus.nestbox.core.content.domain.model.PublicationType
 import nl.rhaydus.nestbox.core.presentation.markdown.MarkdownDocument
 import nl.rhaydus.nestbox.core.presentation.theme.readerTypography
-import nl.rhaydus.nestbox.feature.publication.presentation.action.PublicationDetailAction
 import nl.rhaydus.nestbox.feature.publication.presentation.action.OpenLinkAction
+import nl.rhaydus.nestbox.feature.publication.presentation.action.PublicationDetailAction
 import nl.rhaydus.nestbox.feature.publication.presentation.event.PublicationDetailEvent
 import nl.rhaydus.nestbox.feature.publication.presentation.screenmodel.PublicationDetailScreenModel
 import nl.rhaydus.nestbox.feature.publication.presentation.state.PublicationDetailUiState
@@ -72,7 +72,7 @@ data class PublicationDetailScreen(val publicationId: String) : Screen {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun PublicationDetailScreen(
+    internal fun PublicationDetailScreen(
         state: PublicationDetailUiState,
         onBack: () -> Unit,
         runAction: (PublicationDetailAction) -> Unit,
@@ -100,7 +100,12 @@ data class PublicationDetailScreen(val publicationId: String) : Screen {
                     },
                     // RootScreen's Scaffold already consumes the status-bar inset for every screen, so
                     // the bar must not re-apply it or the title sits a second inset too low.
-                    windowInsets = WindowInsets(0, 0, 0, 0),
+                    windowInsets = WindowInsets(
+                        0,
+                        0,
+                        0,
+                        0,
+                    ),
                 )
             },
         ) { contentPadding ->

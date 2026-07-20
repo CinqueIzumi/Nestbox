@@ -8,7 +8,7 @@ interface PublicationRemoteDataSource {
 
 // Stub for the real GitHub fetch: every id resolves to the one bundled sample publication. A Ktor/GitHub
 // source swaps in via a one-line DI change once the private-repo integration exists.
-class PublicationRemoteDataSourceImpl(private val context: Context) : PublicationRemoteDataSource {
+internal class PublicationRemoteDataSourceImpl(private val context: Context) : PublicationRemoteDataSource {
     override suspend fun fetchPublicationMarkdown(publicationId: String): String =
         context.assets.open(SAMPLE_ISSUE_ASSET).bufferedReader().use { reader -> reader.readText() }
 

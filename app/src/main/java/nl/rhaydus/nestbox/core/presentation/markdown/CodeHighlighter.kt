@@ -13,7 +13,6 @@ import androidx.compose.ui.text.withStyle
  * not claim stays in the plain code colour.
  */
 object CodeHighlighter {
-
     fun highlight(
         code: String,
         language: String?,
@@ -25,11 +24,17 @@ object CodeHighlighter {
         regex.findAll(code).forEach { match ->
             if (match.range.first > cursor) {
                 withStyle(SpanStyle(color = colors.plain)) {
-                    append(code.substring(cursor, match.range.first))
+                    append(code.substring(
+                        cursor,
+                        match.range.first,
+                    ),)
                 }
             }
 
-            withStyle(SpanStyle(color = colorFor(match, colors))) {
+            withStyle(SpanStyle(color = colorFor(
+                match,
+                colors,
+            ),),) {
                 append(match.value)
             }
 
@@ -43,7 +48,10 @@ object CodeHighlighter {
         }
     }
 
-    private fun colorFor(match: MatchResult, colors: CodeColors): Color = when {
+    private fun colorFor(
+        match: MatchResult,
+        colors: CodeColors,
+    ): Color = when {
         match.groups[GROUP_COMMENT] != null -> colors.comment
         match.groups[GROUP_STRING] != null -> colors.string
         match.groups[GROUP_NUMBER] != null -> colors.number
@@ -56,15 +64,27 @@ object CodeHighlighter {
         else -> kotlinRegex
     }
 
-    private fun buildRegex(commentPattern: String, keywords: List<String>): Regex {
+    private fun buildRegex(
+        commentPattern: String,
+        keywords: List<String>,
+    ): Regex {
         val keywordGroup = "@\\w+|\\b(?:${keywords.joinToString(separator = "|")})\\b"
 
         return Regex("($commentPattern)|($STRING_PATTERN)|($NUMBER_PATTERN)|($keywordGroup)")
     }
 
-    private val kotlinRegex by lazy { buildRegex(SLASH_COMMENT, KOTLIN_KEYWORDS) }
-    private val javaRegex by lazy { buildRegex(SLASH_COMMENT, JAVA_KEYWORDS) }
-    private val shellRegex by lazy { buildRegex(HASH_COMMENT, SHELL_KEYWORDS) }
+    private val kotlinRegex by lazy { buildRegex(
+        SLASH_COMMENT,
+        KOTLIN_KEYWORDS,
+    ) }
+    private val javaRegex by lazy { buildRegex(
+        SLASH_COMMENT,
+        JAVA_KEYWORDS,
+    ) }
+    private val shellRegex by lazy { buildRegex(
+        HASH_COMMENT,
+        SHELL_KEYWORDS,
+    ) }
 
     // The four top-level capturing groups of the master regex, in order. Everything inside each
     // alternative is non-capturing, so these indices stay stable.

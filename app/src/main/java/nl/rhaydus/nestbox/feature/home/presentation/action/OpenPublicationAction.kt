@@ -6,7 +6,7 @@ import nl.rhaydus.nestbox.feature.home.presentation.state.HomeLocalVariables
 import nl.rhaydus.nestbox.feature.home.presentation.state.HomeUiState
 import nl.rhaydus.toad.ActionScope
 
-data class OpenPublicationAction(val publicationId: String) : HomeAction {
+internal data class OpenPublicationAction(val publicationId: String) : HomeAction {
     override suspend fun execute(
         dependencies: HomeDependencies,
         scope: ActionScope<HomeUiState, HomeEvent, HomeLocalVariables>,

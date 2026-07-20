@@ -1,13 +1,16 @@
 package nl.rhaydus.nestbox.core.content.data.mapper
 
 class PublicationMarkdownMapper {
-
     fun parseHeader(markdown: String): Triple<Int, String, String>? {
         val match = HEADER_REGEX.find(markdown) ?: return null
 
         val (number, date, marker) = match.destructured
 
-        return Triple(number.toInt(), date, marker)
+        return Triple(
+            number.toInt(),
+            date,
+            marker,
+        )
     }
 
     fun extractPreview(markdown: String): String {
@@ -36,7 +39,10 @@ class PublicationMarkdownMapper {
 
     // Drops the header line; the reading view renders that metadata from its own styled header.
     fun stripHeader(markdown: String): String =
-        markdown.replaceFirst(HEADER_REGEX, "").trimStart()
+        markdown.replaceFirst(
+            HEADER_REGEX,
+            "",
+        ).trimStart()
 
     private companion object {
         val HEADER_REGEX = Regex("""##\s+#(\d+)\s+(\d{4}-\d{2}-\d{2})\s+(\w+)""")

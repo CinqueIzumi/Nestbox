@@ -47,9 +47,12 @@ This project consumes the nl.rhaydus foundation. Capabilities index:
   access token (`nl.rhaydus.platform`).
 - `libs.rhaydus.designsystem.core` - `RhaydusTheme`, `BottomBarScaffold`, `LocalBottomBarPadding` /
   `rememberBottomBarPadding` (`nl.rhaydus.designsystem.*`).
+- `libs.rhaydus.ktlint.rules` - the 14-rule ktlint ruleset, driven from the root build as
+  `ktlintFormat` / `ktlintCheck` (see the style gates below). Not a compile dependency.
 
 Not consumed (yet): `designsystem-editorial` (deliberately - the app's visual design is not settled,
-so it keeps its own widgets for now), `designsystem-image`, `offline-sync`. The foundation's shared
+so it keeps its own widgets for now), `designsystem-image`, `offline-sync`, `detekt-rules`. The
+foundation's shared
 `nl.rhaydus:catalog` is also not consumed -
 Nestbox deliberately pins the androidx/Compose stack ahead of the foundation's set, so `libs` stays
 the single catalog here (`settings.gradle.kts` records how to add it back).
@@ -77,8 +80,9 @@ path.
   the foundation design system and this app's design doc above).
 - A logic-only or UI-only change uses just that one agent; a full new screen goes logic -> UI
   (rhaydus-logic emits the state/action contract, then rhaydus-ui renders it).
-- Review -> **code-reviewer**. Tests -> **unit-test-writer**. Style gates -> the **style-check** skill
-  (note: Nestbox has no ktlint/detekt wiring yet, so that skill has nothing to run here today).
+- Review -> **code-reviewer**. Tests -> **unit-test-writer**. Style gates -> the **style-check** skill,
+  which drives `./gradlew ktlintFormat` (auto-fix) and `./gradlew ktlintCheck` (gate, also wired into
+  `check`). `-Pktlint.root=<dir>` scopes a run to one directory.
 - Reuse-first: check the capabilities index before hand-rolling a component, modifier, or util.
 
 _Re-run `rhaydus-adopt` after changing any `nl.rhaydus` dependency or version - it refreshes this

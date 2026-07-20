@@ -51,11 +51,17 @@ fun MarkdownDocument(
     Column(modifier = modifier) {
         blocks.forEachIndexed { index, block ->
             if (index > 0) {
-                Spacer(modifier = Modifier.height(gapBefore(blocks[index - 1], block)))
+                Spacer(modifier = Modifier.height(gapBefore(
+                    blocks[index - 1],
+                    block,
+                ),),)
             }
 
             when (block) {
-                is MarkdownBlock.Heading -> HeadingBlock(block = block, onLinkClick = onLinkClick)
+                is MarkdownBlock.Heading -> HeadingBlock(
+                    block = block,
+                    onLinkClick = onLinkClick,
+                )
 
                 is MarkdownBlock.Paragraph -> ParagraphBlock(
                     block = block,
@@ -63,11 +69,17 @@ fun MarkdownDocument(
                     onLinkClick = onLinkClick,
                 )
 
-                is MarkdownBlock.BulletItem -> BulletBlock(block = block, onLinkClick = onLinkClick)
+                is MarkdownBlock.BulletItem -> BulletBlock(
+                    block = block,
+                    onLinkClick = onLinkClick,
+                )
 
                 is MarkdownBlock.CodeBlock -> CodeBlock(block = block)
 
-                is MarkdownBlock.Quote -> QuoteBlock(block = block, onLinkClick = onLinkClick)
+                is MarkdownBlock.Quote -> QuoteBlock(
+                    block = block,
+                    onLinkClick = onLinkClick,
+                )
             }
         }
     }
@@ -87,7 +99,10 @@ private fun HeadingBlock(
     }
 
     Text(
-        text = inlineText(block.inlines, onLinkClick),
+        text = inlineText(
+            block.inlines,
+            onLinkClick,
+        ),
         style = style,
         color = MaterialTheme.colorScheme.onSurface,
     )
@@ -100,7 +115,10 @@ private fun ParagraphBlock(
     onLinkClick: (String) -> Unit,
 ) {
     Text(
-        text = inlineText(block.inlines, onLinkClick),
+        text = inlineText(
+            block.inlines,
+            onLinkClick,
+        ),
         style = if (isLead) MaterialTheme.readerTypography.bodyLarge else MaterialTheme.readerTypography.body,
         color = MaterialTheme.colorScheme.onSurface,
     )
@@ -123,7 +141,10 @@ private fun BulletBlock(
         )
 
         Text(
-            text = inlineText(block.inlines, onLinkClick),
+            text = inlineText(
+                block.inlines,
+                onLinkClick,
+            ),
             style = MaterialTheme.readerTypography.body,
             color = MaterialTheme.colorScheme.onSurface,
         )
@@ -140,7 +161,11 @@ private fun CodeBlock(block: MarkdownBlock.CodeBlock) {
         plain = MaterialTheme.colorScheme.onSurface,
     )
     val highlighted = remember(block.code, block.language, colors) {
-        CodeHighlighter.highlight(block.code, block.language, colors)
+        CodeHighlighter.highlight(
+            block.code,
+            block.language,
+            colors,
+        )
     }
 
     Surface(
@@ -174,7 +199,10 @@ private fun QuoteBlock(
         )
 
         Text(
-            text = inlineText(block.inlines, onLinkClick),
+            text = inlineText(
+                block.inlines,
+                onLinkClick,
+            ),
             style = MaterialTheme.readerTypography.pullQuote,
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(start = 16.dp),
@@ -213,7 +241,12 @@ private fun AnnotatedString.Builder.appendInlines(
             is MarkdownInline.Text -> append(inline.text)
 
             is MarkdownInline.Bold -> withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                appendInlines(inline.inlines, codeSpanStyle, linkStyles, onLinkClick)
+                appendInlines(
+                    inline.inlines,
+                    codeSpanStyle,
+                    linkStyles,
+                    onLinkClick,
+                )
             }
 
             is MarkdownInline.Code -> withStyle(codeSpanStyle) {
@@ -228,14 +261,22 @@ private fun AnnotatedString.Builder.appendInlines(
                 )
 
                 withLink(link) {
-                    appendInlines(inline.inlines, codeSpanStyle, linkStyles, onLinkClick)
+                    appendInlines(
+                        inline.inlines,
+                        codeSpanStyle,
+                        linkStyles,
+                        onLinkClick,
+                    )
                 }
             }
         }
     }
 }
 
-private fun gapBefore(previous: MarkdownBlock, next: MarkdownBlock): Dp = when {
+private fun gapBefore(
+    previous: MarkdownBlock,
+    next: MarkdownBlock,
+): Dp = when {
     next is MarkdownBlock.Heading -> 28.dp
     previous is MarkdownBlock.Heading -> 16.dp
     previous is MarkdownBlock.BulletItem && next is MarkdownBlock.BulletItem -> 8.dp

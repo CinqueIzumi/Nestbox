@@ -6,7 +6,7 @@ import nl.rhaydus.nestbox.feature.publication.presentation.state.PublicationDeta
 import nl.rhaydus.nestbox.feature.publication.presentation.state.PublicationDetailUiState
 import nl.rhaydus.toad.ActionScope
 
-data class OpenLinkAction(val url: String) : PublicationDetailAction {
+internal data class OpenLinkAction(val url: String) : PublicationDetailAction {
     override suspend fun execute(
         dependencies: PublicationDetailDependencies,
         scope: ActionScope<PublicationDetailUiState, PublicationDetailEvent, PublicationDetailLocalVariables>,

@@ -13,7 +13,7 @@ import nl.rhaydus.nestbox.feature.profile.presentation.state.ProfileLocalVariabl
 import nl.rhaydus.nestbox.feature.profile.presentation.state.ProfileUiState
 import nl.rhaydus.toad.ToadScreenModel
 
-class ProfileScreenModel(
+internal class ProfileScreenModel(
     private val appDispatchers: AppDispatchers,
     private val startGitHubAuthorizationUseCase: StartGitHubAuthorizationUseCase,
     private val checkGitHubAuthorizationUseCase: CheckGitHubAuthorizationUseCase,

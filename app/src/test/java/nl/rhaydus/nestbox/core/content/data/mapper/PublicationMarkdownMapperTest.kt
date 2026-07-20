@@ -6,12 +6,10 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class PublicationMarkdownMapperTest {
-
     private val mapper = PublicationMarkdownMapper()
 
     @Nested
     inner class ParseHeader {
-
         @Test
         fun `extracts number, date, and type marker from the header line`() {
             // ----- Arrange -----
@@ -21,7 +19,14 @@ class PublicationMarkdownMapperTest {
             val header = mapper.parseHeader(markdown)
 
             // ----- Assert -----
-            assertEquals(Triple(7, "2026-06-12", "Weekly"), header)
+            assertEquals(
+                Triple(
+                    7,
+                    "2026-06-12",
+                    "Weekly",
+                ),
+                header,
+            )
         }
 
         @Test
@@ -39,7 +44,6 @@ class PublicationMarkdownMapperTest {
 
     @Nested
     inner class ExtractPreview {
-
         @Test
         fun `returns the first paragraph after the header collapsed to one line`() {
             // ----- Arrange -----
@@ -56,13 +60,15 @@ class PublicationMarkdownMapperTest {
             val preview = mapper.extractPreview(markdown)
 
             // ----- Assert -----
-            assertEquals("First line of the intro second line of the intro.", preview)
+            assertEquals(
+                "First line of the intro second line of the intro.",
+                preview,
+            )
         }
     }
 
     @Nested
     inner class StripHeader {
-
         @Test
         fun `removes the leading publication header line`() {
             // ----- Arrange -----
@@ -72,7 +78,10 @@ class PublicationMarkdownMapperTest {
             val result = mapper.stripHeader(markdown)
 
             // ----- Assert -----
-            assertEquals("Body paragraph.", result)
+            assertEquals(
+                "Body paragraph.",
+                result,
+            )
         }
     }
 }

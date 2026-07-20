@@ -7,7 +7,7 @@ import nl.rhaydus.nestbox.feature.profile.presentation.state.ProfileLocalVariabl
 import nl.rhaydus.nestbox.feature.profile.presentation.state.ProfileUiState
 import nl.rhaydus.toad.ActionScope
 
-data object DisconnectGitHubAction : ProfileAction {
+internal data object DisconnectGitHubAction : ProfileAction {
     override suspend fun execute(
         dependencies: ProfileDependencies,
         scope: ActionScope<ProfileUiState, ProfileEvent, ProfileLocalVariables>,

@@ -6,7 +6,7 @@ import nl.rhaydus.nestbox.feature.profile.presentation.state.ProfileLocalVariabl
 import nl.rhaydus.nestbox.feature.profile.presentation.state.ProfileUiState
 import nl.rhaydus.toad.Collector
 
-sealed interface ProfileCollector : Collector<
+internal sealed interface ProfileCollector : Collector<
         ProfileUiState,
         ProfileEvent,
         ProfileDependencies,

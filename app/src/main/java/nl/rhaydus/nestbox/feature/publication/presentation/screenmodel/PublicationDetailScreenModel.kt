@@ -12,7 +12,7 @@ import nl.rhaydus.nestbox.feature.publication.presentation.state.PublicationDeta
 import nl.rhaydus.nestbox.feature.publication.presentation.state.PublicationDetailUiState
 import nl.rhaydus.toad.ToadScreenModel
 
-class PublicationDetailScreenModel(
+internal class PublicationDetailScreenModel(
     private val publicationId: String,
     private val appDispatchers: AppDispatchers,
     private val getPublicationUseCase: GetPublicationUseCase,

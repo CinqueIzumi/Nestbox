@@ -7,12 +7,15 @@ import nl.rhaydus.nestbox.feature.publication.presentation.state.PublicationDeta
 import nl.rhaydus.nestbox.feature.publication.presentation.state.PublicationDetailUiState
 import nl.rhaydus.toad.ActionScope
 
-data class LoadPublicationAction(val publicationId: String) : PublicationDetailAction {
+internal data class LoadPublicationAction(val publicationId: String) : PublicationDetailAction {
     override suspend fun execute(
         dependencies: PublicationDetailDependencies,
         scope: ActionScope<PublicationDetailUiState, PublicationDetailEvent, PublicationDetailLocalVariables>,
     ) {
-        scope.setState { it.copy(isLoading = true, errorMessage = null) }
+        scope.setState { it.copy(
+            isLoading = true,
+            errorMessage = null,
+        ) }
 
         dependencies.getPublicationUseCase(publicationId)
             .onSuccess { publication ->

@@ -71,7 +71,7 @@ object ProfileScreen : Screen {
     }
 
     @Composable
-    fun ProfileScreen(
+    internal fun ProfileScreen(
         state: ProfileUiState,
         runAction: (ProfileAction) -> Unit,
     ) {
@@ -254,7 +254,10 @@ object ProfileScreen : Screen {
             Button(
                 onClick = {
                     coroutineScope.launch {
-                        val clip = ClipData.newPlainText("GitHub code", link.userCode)
+                        val clip = ClipData.newPlainText(
+                            "GitHub code",
+                            link.userCode,
+                        )
                         clipboard.setClipEntry(ClipEntry(clip))
                     }
 

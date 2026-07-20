@@ -11,7 +11,7 @@ import nl.rhaydus.nestbox.feature.home.presentation.state.HomeLocalVariables
 import nl.rhaydus.nestbox.feature.home.presentation.state.HomeUiState
 import nl.rhaydus.toad.ToadScreenModel
 
-class HomeScreenModel(
+internal class HomeScreenModel(
     private val appDispatchers: AppDispatchers,
     private val getPublicationsUseCase: GetPublicationsUseCase,
     flows: List<HomeCollector>,

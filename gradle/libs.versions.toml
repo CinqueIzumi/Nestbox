@@ -31,6 +31,7 @@ rhaydus-toad = { group = "nl.rhaydus", name = "toad", version.ref = "rhaydusFoun
 rhaydus-core-common = { group = "nl.rhaydus", name = "core-common", version.ref = "rhaydusFoundation" }
 rhaydus-core-platform = { group = "nl.rhaydus", name = "core-platform", version.ref = "rhaydusFoundation" }
 rhaydus-designsystem-core = { group = "nl.rhaydus", name = "designsystem-core", version.ref = "rhaydusFoundation" }
+rhaydus-ktlint-rules = { group = "nl.rhaydus", name = "ktlint-rules", version.ref = "rhaydusFoundation" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }

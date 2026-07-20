@@ -5,7 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import nl.rhaydus.nestbox.core.content.domain.usecase.GetPublicationsUseCase
 import nl.rhaydus.toad.ActionDependencies
 
-class HomeDependencies(
+internal class HomeDependencies(
     override val coroutineScope: CoroutineScope,
     override val mainDispatcher: CoroutineDispatcher,
     val getPublicationsUseCase: GetPublicationsUseCase,

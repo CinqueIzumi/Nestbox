@@ -8,12 +8,10 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class MarkdownParserTest {
-
     private val parser = MarkdownParser()
 
     @Nested
     inner class Headings {
-
         @Test
         fun `maps atx levels to heading blocks`() {
             // ----- Arrange -----
@@ -23,14 +21,19 @@ class MarkdownParserTest {
             val headings = parser.parse(markdown).filterIsInstance<MarkdownBlock.Heading>()
 
             // ----- Assert -----
-            assertEquals(listOf(2, 3, 4), headings.map { it.level })
-            assertEquals("Two", plainText(headings.first().inlines))
+            assertEquals(
+                listOf(2, 3, 4),
+                headings.map { it.level },
+            )
+            assertEquals(
+                "Two",
+                plainText(headings.first().inlines),
+            )
         }
     }
 
     @Nested
     inner class InlineFormatting {
-
         @Test
         fun `parses bold, inline code, and a link in one paragraph`() {
             // ----- Arrange -----
@@ -44,14 +47,19 @@ class MarkdownParserTest {
             assertTrue(paragraph.inlines.any { it is MarkdownInline.Code && it.text == "code" })
 
             val link = paragraph.inlines.filterIsInstance<MarkdownInline.Link>().single()
-            assertEquals("https://example.com/x", link.url)
-            assertEquals("label", plainText(link.inlines))
+            assertEquals(
+                "https://example.com/x",
+                link.url,
+            )
+            assertEquals(
+                "label",
+                plainText(link.inlines),
+            )
         }
     }
 
     @Nested
     inner class Lists {
-
         @Test
         fun `flattens nested bullets with increasing depth`() {
             // ----- Arrange -----
@@ -65,17 +73,31 @@ class MarkdownParserTest {
             val bullets = parser.parse(markdown).filterIsInstance<MarkdownBlock.BulletItem>()
 
             // ----- Assert -----
-            assertEquals(3, bullets.size)
-            assertEquals(0, bullets[0].depth)
-            assertEquals("Parent", plainText(bullets[0].inlines))
-            assertEquals(1, bullets[1].depth)
-            assertEquals(1, bullets[2].depth)
+            assertEquals(
+                3,
+                bullets.size,
+            )
+            assertEquals(
+                0,
+                bullets[0].depth,
+            )
+            assertEquals(
+                "Parent",
+                plainText(bullets[0].inlines),
+            )
+            assertEquals(
+                1,
+                bullets[1].depth,
+            )
+            assertEquals(
+                1,
+                bullets[2].depth,
+            )
         }
     }
 
     @Nested
     inner class CodeFence {
-
         @Test
         fun `keeps the language and interior blank lines`() {
             // ----- Arrange -----
@@ -85,14 +107,19 @@ class MarkdownParserTest {
             val code = parser.parse(markdown).filterIsInstance<MarkdownBlock.CodeBlock>().single()
 
             // ----- Assert -----
-            assertEquals("kotlin", code.language)
-            assertEquals("val a = 1\n\nval b = 2", code.code)
+            assertEquals(
+                "kotlin",
+                code.language,
+            )
+            assertEquals(
+                "val a = 1\n\nval b = 2",
+                code.code,
+            )
         }
     }
 
     @Nested
     inner class Quote {
-
         @Test
         fun `parses blockquote text without the marker`() {
             // ----- Arrange -----
@@ -102,7 +129,10 @@ class MarkdownParserTest {
             val quote = parser.parse(markdown).filterIsInstance<MarkdownBlock.Quote>().single()
 
             // ----- Assert -----
-            assertEquals("A quoted line.", plainText(quote.inlines))
+            assertEquals(
+                "A quoted line.",
+                plainText(quote.inlines),
+            )
         }
     }
 

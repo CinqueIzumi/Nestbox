@@ -5,6 +5,13 @@ as declared in `gradle.properties` (`kotlin.code.style=official`). Conventions s
 TOAD presentation architecture live in [`toad-architecture.md`](toad-architecture.md); this guide
 covers everything else.
 
+The mechanizable half is **enforced**, not just documented: the shared `nl.rhaydus:ktlint-rules`
+ruleset runs from the root build. `./gradlew ktlintFormat` auto-fixes what it can (multi-argument
+one-per-line wrapping, trailing commas, blank-line rules, sibling-composable spacing, boolean
+`.not()`); `./gradlew ktlintCheck` gates on everything including the structural rules that have no
+auto-fix, and `check` depends on it. Scope a run with `-Pktlint.root=<dir>`. The full rule list is in
+the foundation's [`code-style.md`](rhaydus/0.3.1/code-style.md).
+
 ## Naming Conventions
 
 Files are named in **PascalCase**, matching their primary class.
@@ -77,13 +84,16 @@ if (!isLoading) { ... }
 
 ## Visibility
 
-Nestbox is currently a **single module**, so the strict multi-module "internal-by-default" rule
-doesn't yet apply. For now: use `private` for genuinely local helpers, and keep the public surface
-intentional. When the project splits into modules (`:app`/`:feature:*`/`:core:*`), adopt
-internal-by-default for module-private declarations — TOAD plumbing (`*ScreenModel`, `*Action`,
-`*UiState`, `*Event`, `*Dependencies`, `*LocalVariables`, collectors), `*Impl` classes, and
-module-private helpers — reserving `public` for the deliberate cross-module surface (domain
-contracts, `*UseCase`, `*Screen`/`*Tab`, the aggregated `*Module`, shared design-system components).
+Nestbox is a **single module** today, but it follows internal-by-default anyway, and `ktlintCheck`
+gates it. Module-private declarations are `internal`: TOAD plumbing (`*ScreenModel`, `*Action`,
+`*UiState`, `*Event`, `*Dependencies`, `*LocalVariables`, collectors), `*Impl` classes, the stateless
+render composables a `*Screen` object hosts, and module-private helpers. `public` is reserved for the
+deliberate cross-module surface — domain contracts, `*UseCase`, `*Screen`/`*Tab`, the aggregated
+`*Module`, shared design-system components. `private` still covers genuinely local helpers.
+
+Visibility cascades: marking a `*UiState` internal forces its collector and its render composable
+internal too, since a public declaration cannot expose an internal type. That is the intended
+direction — follow it rather than widening the state back to public.
 
 ## Compose
 

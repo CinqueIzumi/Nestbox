@@ -64,7 +64,7 @@ object HomeScreen : Screen {
     }
 
     @Composable
-    fun HomeScreen(
+    internal fun HomeScreen(
         state: HomeUiState,
         runAction: (HomeAction) -> Unit,
     ) {
