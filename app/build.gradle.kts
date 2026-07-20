@@ -17,7 +17,8 @@ android {
 
     defaultConfig {
         applicationId = "nl.rhaydus.nestbox"
-        minSdk = 24
+        // The nl.rhaydus foundation libraries declare minSdk 26, so the app cannot sit below it.
+        minSdk = 26
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
@@ -57,6 +58,11 @@ android {
 }
 
 dependencies {
+    // nl.rhaydus foundation
+    implementation(libs.rhaydus.toad)
+    implementation(libs.rhaydus.core.common)
+    implementation(libs.rhaydus.designsystem.core)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.runtime.ktx)

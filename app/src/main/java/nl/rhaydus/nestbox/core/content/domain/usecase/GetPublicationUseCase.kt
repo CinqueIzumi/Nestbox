@@ -1,6 +1,6 @@
 package nl.rhaydus.nestbox.core.content.domain.usecase
 
-import nl.rhaydus.nestbox.core.common.runCatchingCancellable
+import nl.rhaydus.common.runCatchingCancellable
 import nl.rhaydus.nestbox.core.content.domain.model.Publication
 import nl.rhaydus.nestbox.core.content.domain.repository.PublicationRepository
 

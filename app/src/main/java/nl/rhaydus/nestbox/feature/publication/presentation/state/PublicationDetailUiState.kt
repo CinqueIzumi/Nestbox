@@ -2,7 +2,7 @@ package nl.rhaydus.nestbox.feature.publication.presentation.state
 
 import nl.rhaydus.nestbox.core.content.domain.model.PublicationType
 import nl.rhaydus.nestbox.core.presentation.markdown.model.MarkdownBlock
-import nl.rhaydus.nestbox.core.presentation.toad.UiState
+import nl.rhaydus.toad.UiState
 
 data class PublicationDetailUiState(
     val isLoading: Boolean = true,

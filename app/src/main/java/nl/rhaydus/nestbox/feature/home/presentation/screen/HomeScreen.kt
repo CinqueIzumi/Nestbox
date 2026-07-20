@@ -27,9 +27,9 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import nl.rhaydus.designsystem.layout.rememberBottomBarPadding
 import nl.rhaydus.nestbox.core.content.domain.model.PublicationSummary
 import nl.rhaydus.nestbox.core.presentation.theme.readerTypography
-import nl.rhaydus.nestbox.core.presentation.util.rememberBottomBarPadding
 import nl.rhaydus.nestbox.core.presentation.widget.PublicationCard
 import nl.rhaydus.nestbox.core.presentation.widget.SectionHeader
 import nl.rhaydus.nestbox.feature.home.presentation.action.HomeAction

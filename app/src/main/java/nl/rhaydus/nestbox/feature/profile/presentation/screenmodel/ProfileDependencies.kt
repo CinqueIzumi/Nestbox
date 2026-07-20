@@ -6,7 +6,7 @@ import nl.rhaydus.nestbox.core.auth.domain.usecase.CheckGitHubAuthorizationUseCa
 import nl.rhaydus.nestbox.core.auth.domain.usecase.GetGitHubAccountUseCase
 import nl.rhaydus.nestbox.core.auth.domain.usecase.SignOutGitHubUseCase
 import nl.rhaydus.nestbox.core.auth.domain.usecase.StartGitHubAuthorizationUseCase
-import nl.rhaydus.nestbox.core.presentation.toad.ActionDependencies
+import nl.rhaydus.toad.ActionDependencies
 
 class ProfileDependencies(
     override val coroutineScope: CoroutineScope,

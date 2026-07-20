@@ -1,5 +1,5 @@
 package nl.rhaydus.nestbox.feature.profile.presentation.event
 
-import nl.rhaydus.nestbox.core.presentation.toad.UiEvent
+import nl.rhaydus.toad.UiEvent
 
 sealed interface ProfileEvent : UiEvent

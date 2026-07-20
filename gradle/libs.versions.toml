@@ -8,7 +8,12 @@ junitVersion = "1.3.0"
 espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.10.0"
 activityCompose = "1.13.0"
-kotlin = "2.2.10"
+# The pinned nl.rhaydus foundation release. Bumping it also means re-vendoring docs/rhaydus/<version>/
+# and re-running the rhaydus-adopt agent.
+rhaydusFoundation = "0.3.1"
+# Must be >= the Kotlin the foundation publishes with: a compiler cannot read metadata produced by a
+# newer one.
+kotlin = "2.3.21"
 composeBom = "2026.02.01"
 # Overrides the BOM's material3 (1.4.0) to get Expressive components (HorizontalFloatingToolbar, etc.)
 material3 = "1.5.0-alpha21"
@@ -21,6 +26,11 @@ coreSplashscreen = "1.0.1"
 markdown = "0.7.5"
 
 [libraries]
+# nl.rhaydus foundation. Substituted for local source when local.properties sets foundation.local=true
+# (see settings.gradle.kts); docs/rhaydus/ carries the capabilities index at the pinned version.
+rhaydus-toad = { group = "nl.rhaydus", name = "toad", version.ref = "rhaydusFoundation" }
+rhaydus-core-common = { group = "nl.rhaydus", name = "core-common", version.ref = "rhaydusFoundation" }
+rhaydus-designsystem-core = { group = "nl.rhaydus", name = "designsystem-core", version.ref = "rhaydusFoundation" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }

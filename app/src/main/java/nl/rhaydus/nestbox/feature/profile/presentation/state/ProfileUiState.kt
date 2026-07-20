@@ -1,6 +1,6 @@
 package nl.rhaydus.nestbox.feature.profile.presentation.state
 
-import nl.rhaydus.nestbox.core.presentation.toad.UiState
+import nl.rhaydus.toad.UiState
 
 data class ProfileUiState(
     val link: GitHubLinkState = GitHubLinkState.Loading,

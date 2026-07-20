@@ -1,11 +1,11 @@
 package nl.rhaydus.nestbox.feature.publication.presentation.action
 
 import kotlinx.coroutines.withContext
-import nl.rhaydus.nestbox.core.presentation.toad.ActionScope
+import nl.rhaydus.nestbox.feature.publication.presentation.event.PublicationDetailEvent
 import nl.rhaydus.nestbox.feature.publication.presentation.screenmodel.PublicationDetailDependencies
 import nl.rhaydus.nestbox.feature.publication.presentation.state.PublicationDetailLocalVariables
 import nl.rhaydus.nestbox.feature.publication.presentation.state.PublicationDetailUiState
-import nl.rhaydus.nestbox.feature.publication.presentation.event.PublicationDetailEvent
+import nl.rhaydus.toad.ActionScope
 
 data class LoadPublicationAction(val publicationId: String) : PublicationDetailAction {
     override suspend fun execute(

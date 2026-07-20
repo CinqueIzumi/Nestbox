@@ -1,13 +1,12 @@
 package nl.rhaydus.nestbox.core.presentation.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import nl.rhaydus.designsystem.theme.RhaydusTheme
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -85,7 +84,11 @@ private val darkScheme = darkColorScheme(
     surfaceContainerHighest = surfaceContainerHighestDark,
 )
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+/**
+ * Nestbox's brand theme: the foundation's [RhaydusTheme] scaffold supplied with this app's own color
+ * schemes and Material type scale, wrapped in the reader typography the Doveletter design system adds
+ * on top (see `docs/design-system.md`).
+ */
 @Composable
 fun NestboxTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -95,10 +98,10 @@ fun NestboxTheme(
     val colorScheme = if (darkTheme) darkScheme else lightScheme
 
     CompositionLocalProvider(LocalReaderTypography provides DefaultReaderTypography) {
-        MaterialExpressiveTheme(
+        RhaydusTheme(
             colorScheme = colorScheme,
-            motionScheme = MotionScheme.expressive(),
             typography = NestboxTypography,
+            motionScheme = MotionScheme.expressive(),
             content = content,
         )
     }

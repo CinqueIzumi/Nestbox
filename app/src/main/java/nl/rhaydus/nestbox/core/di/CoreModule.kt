@@ -1,7 +1,7 @@
 package nl.rhaydus.nestbox.core.di
 
 import kotlinx.coroutines.Dispatchers
-import nl.rhaydus.nestbox.core.presentation.dispatchers.AppDispatchers
+import nl.rhaydus.common.AppDispatchers
 import org.koin.dsl.module
 
 val coreModule = module {

@@ -42,8 +42,8 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import kotlinx.coroutines.launch
+import nl.rhaydus.designsystem.layout.rememberBottomBarPadding
 import nl.rhaydus.nestbox.core.presentation.theme.readerTypography
-import nl.rhaydus.nestbox.core.presentation.util.rememberBottomBarPadding
 import nl.rhaydus.nestbox.core.presentation.widget.SectionHeader
 import nl.rhaydus.nestbox.feature.profile.presentation.action.CancelGitHubLinkAction
 import nl.rhaydus.nestbox.feature.profile.presentation.action.CheckGitHubAuthorizationAction

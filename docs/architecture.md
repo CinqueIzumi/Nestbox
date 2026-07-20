@@ -13,9 +13,27 @@ nl/rhaydus/nestbox/
 ├── core/            # Shared infrastructure + operation services consumed by features
 │   ├── network/         # Ktor client factory
 │   ├── auth/            # GitHub account/link operation service (data + domain)
-│   └── presentation/    # TOAD framework, theme, shared widgets, dispatchers, nav shell
+│   └── presentation/    # Theme, shared widgets, markdown rendering, nav shell
 └── feature/         # Leaf features, one folder each (home, profile, …)
 ```
+
+## The nl.rhaydus foundation
+
+Nestbox builds on the shared `nl.rhaydus` foundation rather than carrying its own copies of the
+cross-app primitives. Pinned in `gradle/libs.versions.toml` (`rhaydusFoundation`), consumed from
+Maven Central, docs vendored at the pinned version under [`rhaydus/`](rhaydus/):
+
+| Artifact | What Nestbox takes from it |
+|---|---|
+| `nl.rhaydus:toad` | The whole TOAD runtime — `ToadScreenModel`, `UiState`/`UiAction`/`UiEvent`, `Collector`, `ActionDependencies`, `ActionScope`, `LocalVariables` (package `nl.rhaydus.toad`). |
+| `nl.rhaydus:core-common` | `AppDispatchers`, `runCatchingCancellable` (package `nl.rhaydus.common`). |
+| `nl.rhaydus:designsystem-core` | `RhaydusTheme` (the Material 3 Expressive scaffold `NestboxTheme` wraps), `BottomBarScaffold` + `LocalBottomBarPadding` / `rememberBottomBarPadding` (package `nl.rhaydus.designsystem.*`). |
+
+**Reuse-first:** before hand-rolling a component, modifier, util, or layout primitive, check
+[`rhaydus/0.3.1/CAPABILITIES.md`](rhaydus/0.3.1/CAPABILITIES.md) — the foundation may already have it,
+and reinventing something listed there is a defect rather than a style nit. Nestbox's own brand
+language (colors, reader typography, editorial widgets) stays in this repo; the foundation is
+deliberately brand-agnostic.
 
 ## Layered Architecture
 
@@ -68,7 +86,8 @@ the layer a type sits in:
   but-profile-fetch-fails, so a valid link isn't dropped). Catching purely to hide an error from the
   caller is a smell.
 - **Use cases return `Result<T>` and own failure policy.** Every use case wraps its repository call
-  in `runCatchingCancellable` (`core/common/`) and returns `Result<T>` — never the bare domain type.
+  in `runCatchingCancellable` (`nl.rhaydus.common`, from the `nl.rhaydus:core-common` foundation
+  artifact) and returns `Result<T>` — never the bare domain type.
   `runCatchingCancellable` is `runCatching` that rethrows `CancellationException`, so structured-
   concurrency cancellation is never captured as a `Result.failure`. This is the seam where "repos
   throw" becomes "callers get a value-typed outcome". Cross-operation reactions to a failure live
@@ -144,5 +163,6 @@ importing each other's `Screen`/`Tab` classes directly.
 
 ## Dispatchers
 
-`AppDispatchers` provides `Main`/`IO`/`Default` via DI for testability. Actions run on `Main`; data
-sources/repositories switch to `IO` for network and disk work.
+`AppDispatchers` (`nl.rhaydus.common`, from the `nl.rhaydus:core-common` foundation artifact)
+provides `Main`/`IO`/`Default` via DI for testability. Actions run on `Main`; data sources/
+repositories switch to `IO` for network and disk work.

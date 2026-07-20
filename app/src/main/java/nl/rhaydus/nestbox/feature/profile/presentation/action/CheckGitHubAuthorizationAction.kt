@@ -1,12 +1,12 @@
 package nl.rhaydus.nestbox.feature.profile.presentation.action
 
 import nl.rhaydus.nestbox.core.auth.domain.model.AuthorizationResult
-import nl.rhaydus.nestbox.core.presentation.toad.ActionScope
 import nl.rhaydus.nestbox.feature.profile.presentation.event.ProfileEvent
 import nl.rhaydus.nestbox.feature.profile.presentation.screenmodel.ProfileDependencies
 import nl.rhaydus.nestbox.feature.profile.presentation.state.GitHubLinkState
 import nl.rhaydus.nestbox.feature.profile.presentation.state.ProfileLocalVariables
 import nl.rhaydus.nestbox.feature.profile.presentation.state.ProfileUiState
+import nl.rhaydus.toad.ActionScope
 
 // Dispatched on every screen ON_RESUME. While linking it polls GitHub once (the user has just
 // returned from approving in the browser); on first show it restores any previously stored link.

@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import nl.rhaydus.nestbox.core.content.domain.usecase.GetPublicationUseCase
 import nl.rhaydus.nestbox.core.presentation.markdown.MarkdownParser
-import nl.rhaydus.nestbox.core.presentation.toad.ActionDependencies
+import nl.rhaydus.toad.ActionDependencies
 
 class PublicationDetailDependencies(
     override val coroutineScope: CoroutineScope,

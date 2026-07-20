@@ -1,5 +1,6 @@
 package nl.rhaydus.nestbox.core.auth.di
 
+import nl.rhaydus.common.AppDispatchers
 import nl.rhaydus.nestbox.BuildConfig
 import nl.rhaydus.nestbox.core.auth.data.datasource.GitHubAuthRemoteDataSource
 import nl.rhaydus.nestbox.core.auth.data.datasource.GitHubAuthRemoteDataSourceImpl
@@ -13,7 +14,6 @@ import nl.rhaydus.nestbox.core.auth.domain.usecase.GetGitHubAccountUseCase
 import nl.rhaydus.nestbox.core.auth.domain.usecase.SignOutGitHubUseCase
 import nl.rhaydus.nestbox.core.auth.domain.usecase.StartGitHubAuthorizationUseCase
 import nl.rhaydus.nestbox.core.network.createHttpClient
-import nl.rhaydus.nestbox.core.presentation.dispatchers.AppDispatchers
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 

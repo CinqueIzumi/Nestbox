@@ -177,7 +177,7 @@ for the full rationale. In short:
   business decisions* (e.g. falling back to a placeholder account), never for hiding errors the
   caller should see or for running failure-policy side effects.
 - **Every use case returns `Result<T>` and owns failure policy,** wrapping its repository call in
-  `runCatchingCancellable` (`core/common/`) — `runCatching` that rethrows `CancellationException` so
+  `runCatchingCancellable` (`nl.rhaydus.common`) — `runCatching` that rethrows `CancellationException` so
   a cancelled coroutine never becomes a `Result.failure`. Never use bare `runCatching` around a
   suspend call. Reactions to a failure that span operations belong here, not in the repository (e.g.
   `GetGitHubAccountUseCase` drops the stored token via `signOut()` when the fetch fails, then
