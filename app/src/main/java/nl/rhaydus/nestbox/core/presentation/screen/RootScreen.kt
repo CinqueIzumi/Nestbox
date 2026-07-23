@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.NavigatorDisposeBehavior
 
 object RootScreen : Screen {
     @Composable
@@ -18,7 +19,13 @@ object RootScreen : Screen {
                     .fillMaxSize()
                     .padding(it),
             ) {
-                Navigator(BottomBarScreen)
+                // Pushing a screen (e.g. PublicationDetailScreen) takes BottomBarScreen out of
+                // composition. Keeping the nested tab navigator alive across that push preserves
+                // each tab's saved state, notably the home archive's scroll position.
+                Navigator(
+                    screen = BottomBarScreen,
+                    disposeBehavior = NavigatorDisposeBehavior(disposeNestedNavigators = false),
+                )
             }
         }
     }
