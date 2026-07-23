@@ -55,6 +55,17 @@ val authModule = module {
 
     factory { StartGitHubAuthorizationUseCase(accountRepository = get()) }
     factory { CheckGitHubAuthorizationUseCase(accountRepository = get()) }
-    factory { GetGitHubAccountUseCase(accountRepository = get()) }
-    factory { SignOutGitHubUseCase(accountRepository = get()) }
+    factory {
+        GetGitHubAccountUseCase(
+            accountRepository = get(),
+            signOutGitHubUseCase = get(),
+        )
+    }
+
+    factory {
+        SignOutGitHubUseCase(
+            accountRepository = get(),
+            publicationRepository = get(),
+        )
+    }
 }

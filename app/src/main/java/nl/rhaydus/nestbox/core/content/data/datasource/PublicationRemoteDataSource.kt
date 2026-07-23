@@ -9,8 +9,10 @@ import io.ktor.client.request.parameter
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.isSuccess
 import nl.rhaydus.nestbox.core.auth.data.datasource.TokenLocalDataSource
+import nl.rhaydus.nestbox.core.auth.domain.model.UnauthorizedException
 import nl.rhaydus.nestbox.core.content.data.model.CommitResponse
 import nl.rhaydus.nestbox.core.content.data.model.RepositoryFile
 import nl.rhaydus.nestbox.core.content.data.model.TreeResponse
@@ -57,7 +59,10 @@ internal class PublicationRemoteDataSourceImpl(
             )
         }
 
-        response.requireSuccess("read the branch head")
+        response.requireSuccess(
+            attempt = "read the branch head",
+            missingMeansNoAccess = true,
+        )
 
         val commits: List<CommitResponse> = response.body()
 
@@ -74,7 +79,10 @@ internal class PublicationRemoteDataSourceImpl(
             )
         }
 
-        response.requireSuccess("list the repository tree")
+        response.requireSuccess(
+            attempt = "list the repository tree",
+            missingMeansNoAccess = true,
+        )
 
         val tree: TreeResponse = response.body()
 
@@ -137,12 +145,29 @@ internal class PublicationRemoteDataSourceImpl(
         return repository
     }
 
-    private suspend fun HttpResponse.requireSuccess(attempt: String) {
+    /**
+     * [missingMeansNoAccess] marks the repository-level calls, where a 404 is GitHub declining to
+     * confirm the repository exists to someone who cannot read it, and so means access is gone. It
+     * stays false for a single blob, where a 404 is a content anomaly rather than a lost credential,
+     * and must not be grounds for deleting everything already synced.
+     */
+    private suspend fun HttpResponse.requireSuccess(
+        attempt: String,
+        missingMeansNoAccess: Boolean = false,
+    ) {
         if (status.isSuccess()) return
 
         // The body carries GitHub's own explanation ("Bad credentials", "Not Found"), which is the
         // difference between a wrong token and a token the organisation refuses to honour.
-        error("Could not $attempt: HTTP $status. ${bodyAsText().take(BODY_EXCERPT_LENGTH)}")
+        val detail = "Could not $attempt: HTTP $status. ${bodyAsText().take(BODY_EXCERPT_LENGTH)}"
+
+        val hasLostAccess = status == HttpStatusCode.Unauthorized ||
+            status == HttpStatusCode.Forbidden ||
+            (missingMeansNoAccess && status == HttpStatusCode.NotFound)
+
+        if (hasLostAccess) throw UnauthorizedException(detail)
+
+        error(detail)
     }
 
     private companion object {

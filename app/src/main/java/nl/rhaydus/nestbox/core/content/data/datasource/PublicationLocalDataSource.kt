@@ -22,6 +22,9 @@ interface PublicationLocalDataSource {
     suspend fun listPaths(): List<String>
 
     suspend fun readMarkdown(path: String): String
+
+    /** Removes every synced publication and the manifest with it. */
+    suspend fun clear()
 }
 
 /**
@@ -85,6 +88,10 @@ internal class PublicationLocalDataSourceImpl(context: Context) : PublicationLoc
     }
 
     override suspend fun readMarkdown(path: String): String = resolve(path).readText()
+
+    override suspend fun clear() {
+        root.deleteRecursively()
+    }
 
     private fun isMarkdown(path: String): Boolean = path.endsWith(
         MARKDOWN_EXTENSION,

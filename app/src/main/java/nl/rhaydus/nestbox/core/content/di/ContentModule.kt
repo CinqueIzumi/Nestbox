@@ -39,6 +39,17 @@ val contentModule = module {
 
     single { MarkdownParser() }
 
-    factory { GetPublicationsUseCase(publicationRepository = get()) }
-    factory { GetPublicationUseCase(publicationRepository = get()) }
+    factory {
+        GetPublicationsUseCase(
+            publicationRepository = get(),
+            signOutGitHubUseCase = get(),
+        )
+    }
+
+    factory {
+        GetPublicationUseCase(
+            publicationRepository = get(),
+            signOutGitHubUseCase = get(),
+        )
+    }
 }

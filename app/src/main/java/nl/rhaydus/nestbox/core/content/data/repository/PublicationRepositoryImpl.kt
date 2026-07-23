@@ -71,6 +71,12 @@ internal class PublicationRepositoryImpl(
         )
     }
 
+    // Behind the same lock as the sync, so content cannot be deleted while a sync is midway through
+    // writing it and leave orphaned files the manifest no longer accounts for.
+    override suspend fun clearLocalContent() = withContext(ioDispatcher) {
+        syncMutex.withLock { localDataSource.clear() }
+    }
+
     private suspend fun sync() = syncMutex.withLock {
         val manifest = localDataSource.readManifest()
 

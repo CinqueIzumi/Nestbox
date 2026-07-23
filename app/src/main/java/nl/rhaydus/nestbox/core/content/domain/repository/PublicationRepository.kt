@@ -7,4 +7,7 @@ interface PublicationRepository {
     suspend fun getPublications(): List<PublicationSummary>
 
     suspend fun getPublication(id: String): Publication
+
+    /** Drops every synced publication, for when the subscription can no longer be read. */
+    suspend fun clearLocalContent()
 }
