@@ -2,14 +2,16 @@ package nl.rhaydus.nestbox.feature.home.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -40,6 +42,10 @@ import nl.rhaydus.nestbox.feature.home.presentation.state.HomeUiState
 import nl.rhaydus.nestbox.feature.publication.presentation.screen.PublicationDetailScreen
 
 object HomeScreen : Screen {
+    private const val MASTHEAD_KEY = "masthead"
+    private const val LOADING_KEY = "loading"
+    private const val ERROR_KEY = "error"
+
     @Composable
     override fun Content() {
         val screenModel = koinScreenModel<HomeScreenModel>()
@@ -68,67 +74,78 @@ object HomeScreen : Screen {
         state: HomeUiState,
         runAction: (HomeAction) -> Unit,
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp),
+        val errorMessage = state.errorMessage
+
+        // Lazy rather than a scrolling Column: the archive runs to hundreds of publications, and
+        // composing every card up front is what makes the list stutter.
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(
+                start = 24.dp,
+                top = 16.dp,
+                end = 24.dp,
+                bottom = rememberBottomBarPadding(),
+            ),
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
+            item(key = MASTHEAD_KEY) {
+                Column {
+                    Text(
+                        text = "THE DOVELETTER",
+                        style = MaterialTheme.readerTypography.kicker,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
 
-            Text(
-                text = "THE DOVELETTER",
-                style = MaterialTheme.readerTypography.kicker,
-                color = MaterialTheme.colorScheme.primary,
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
+            }
 
             when {
-                state.isLoading -> LoadingState()
+                state.isLoading -> item(key = LOADING_KEY) { LoadingState() }
 
-                state.errorMessage != null -> ErrorState(message = state.errorMessage)
+                errorMessage != null -> item(key = ERROR_KEY) { ErrorState(message = errorMessage) }
 
-                else -> PublicationArchive(
+                else -> publicationArchive(
                     publications = state.publications,
                     runAction = runAction,
                 )
             }
-
-            Spacer(modifier = Modifier.height(rememberBottomBarPadding()))
         }
     }
 
-    @Composable
-    private fun PublicationArchive(
+    private fun LazyListScope.publicationArchive(
         publications: List<PublicationSummary>,
         runAction: (HomeAction) -> Unit,
     ) {
         val latest = publications.firstOrNull() ?: return
         val archive = publications.drop(1)
 
-        LatestPublicationHero(
-            publication = latest,
-            onOpen = { runAction(OpenPublicationAction(latest.id)) },
-        )
+        item(key = latest.id) {
+            Column {
+                LatestPublicationHero(
+                    publication = latest,
+                    onOpen = { runAction(OpenPublicationAction(latest.id)) },
+                )
 
-        Spacer(modifier = Modifier.height(40.dp))
+                Spacer(modifier = Modifier.height(40.dp))
 
-        SectionHeader(
-            kicker = "Archive",
-            headline = "Past publications",
-        )
+                SectionHeader(
+                    kicker = "Archive",
+                    headline = "Past publications",
+                )
 
-        Spacer(modifier = Modifier.height(20.dp))
-
-        archive.forEachIndexed { index, publication ->
-            if (index > 0) {
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(20.dp))
             }
+        }
 
+        // The hero item already ends with the 20dp run-in, so only later cards carry their own gap.
+        itemsIndexed(
+            items = archive,
+            key = { _, publication -> publication.id },
+        ) { index, publication ->
             PublicationCard(
                 publication = publication,
                 onClick = { runAction(OpenPublicationAction(publication.id)) },
+                modifier = Modifier.padding(top = if (index > 0) 12.dp else 0.dp),
             )
         }
     }
