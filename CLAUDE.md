@@ -26,6 +26,14 @@ Read these first, so you don't have to reverse-engineer the existing code:
 - GitHub auth uses the OAuth **device flow**; it needs `GITHUB_CLIENT_ID` in `local.properties`
   (surfaced via `BuildConfig.GITHUB_CLIENT_ID`). The client id is not a secret but is kept out of
   version control.
+- The publications are read from a private repository named by `DOVELETTER_REPOSITORY`
+  (`owner/name`) and `DOVELETTER_BRANCH` (defaults to `main`) in `local.properties`.
+- **`DOVELETTER_TOKEN` is a debug-only escape hatch.** The `doveletter` organisation disallows OAuth
+  apps, so a device-flow token cannot see the repository; a subscriber's own personal access token
+  in `local.properties` is seeded into `SecureStorage` on first read by
+  `DebugSeedingTokenLocalDataSource`, which is only wired up when `BuildConfig.DEBUG` is set and the
+  field is non-blank. Release builds declare the field empty, so no shipped build carries a
+  credential. This exists until a token-entry screen replaces it; it is not the end state.
 - The foundation version is pinned once in `gradle/libs.versions.toml` (`rhaydusFoundation`), like
   every other dependency; the modules are declared as `libs.rhaydus.*` aliases.
 - Foundation constraints on this build: **minSdk 26** (the foundation libraries declare it) and

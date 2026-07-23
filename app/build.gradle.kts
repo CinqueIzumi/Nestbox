@@ -31,10 +31,40 @@ android {
             "GITHUB_CLIENT_ID",
             "\"${localProperties.getProperty("GITHUB_CLIENT_ID", "")}\"",
         )
+
+        // The private repository the publications are read from, as "owner/name".
+        buildConfigField(
+            "String",
+            "DOVELETTER_REPOSITORY",
+            "\"${localProperties.getProperty("DOVELETTER_REPOSITORY", "")}\"",
+        )
+
+        buildConfigField(
+            "String",
+            "DOVELETTER_BRANCH",
+            "\"${localProperties.getProperty("DOVELETTER_BRANCH", "main")}\"",
+        )
     }
 
     buildTypes {
+        debug {
+            // A subscriber's personal access token, read from local.properties so the content layer
+            // can reach the private repository before the token-entry UI exists. Declared empty in
+            // release, so no build ever ships a baked-in credential.
+            buildConfigField(
+                "String",
+                "DOVELETTER_TOKEN",
+                "\"${localProperties.getProperty("DOVELETTER_TOKEN", "")}\"",
+            )
+        }
+
         release {
+            buildConfigField(
+                "String",
+                "DOVELETTER_TOKEN",
+                "\"\"",
+            )
+
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

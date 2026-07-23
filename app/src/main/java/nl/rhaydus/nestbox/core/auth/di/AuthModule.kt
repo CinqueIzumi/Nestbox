@@ -2,6 +2,7 @@ package nl.rhaydus.nestbox.core.auth.di
 
 import nl.rhaydus.common.AppDispatchers
 import nl.rhaydus.nestbox.BuildConfig
+import nl.rhaydus.nestbox.core.auth.data.datasource.DebugSeedingTokenLocalDataSource
 import nl.rhaydus.nestbox.core.auth.data.datasource.GitHubAuthRemoteDataSource
 import nl.rhaydus.nestbox.core.auth.data.datasource.GitHubAuthRemoteDataSourceImpl
 import nl.rhaydus.nestbox.core.auth.data.datasource.TokenLocalDataSource
@@ -27,7 +28,21 @@ val authModule = module {
             dispatchers = get(),
         )
     }
-    single<TokenLocalDataSource> { TokenLocalDataSourceImpl(secureStorage = get()) }
+    single<TokenLocalDataSource> {
+        val store = TokenLocalDataSourceImpl(secureStorage = get())
+
+        // Debug builds with a token in local.properties read the private repository without the
+        // device flow, which the doveletter organisation blocks for OAuth apps. Release builds
+        // declare the field empty, so the decorator is never applied there.
+        if (BuildConfig.DEBUG && BuildConfig.DOVELETTER_TOKEN.isNotBlank()) {
+            DebugSeedingTokenLocalDataSource(
+                delegate = store,
+                seedToken = BuildConfig.DOVELETTER_TOKEN,
+            )
+        } else {
+            store
+        }
+    }
 
     single<AccountRepository> {
         AccountRepositoryImpl(

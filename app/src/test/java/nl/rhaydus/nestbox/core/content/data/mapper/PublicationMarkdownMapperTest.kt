@@ -1,5 +1,6 @@
 package nl.rhaydus.nestbox.core.content.data.mapper
 
+import nl.rhaydus.nestbox.core.content.data.model.PublicationHeader
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Nested
@@ -20,10 +21,10 @@ class PublicationMarkdownMapperTest {
 
             // ----- Assert -----
             assertEquals(
-                Triple(
-                    7,
-                    "2026-06-12",
-                    "Weekly",
+                PublicationHeader(
+                    number = 7,
+                    date = "2026-06-12",
+                    marker = "Weekly",
                 ),
                 header,
             )
@@ -33,6 +34,18 @@ class PublicationMarkdownMapperTest {
         fun `returns null when there is no publication header`() {
             // ----- Arrange -----
             val markdown = "## Article & References\n\nNo publication header here."
+
+            // ----- Act -----
+            val header = mapper.parseHeader(markdown)
+
+            // ----- Assert -----
+            assertNull(header)
+        }
+
+        @Test
+        fun `ignores a header quoted further down, as the README advertises the latest issue`() {
+            // ----- Arrange -----
+            val markdown = "# Dove Letter\n\nA subscription repository.\n\n## #105 2026-07-20 Weekly"
 
             // ----- Act -----
             val header = mapper.parseHeader(markdown)
@@ -108,20 +121,119 @@ class PublicationMarkdownMapperTest {
     }
 
     @Nested
-    inner class StripHeader {
+    inner class ExtractPreviewFromRealShapes {
+        @Test
+        fun `collapses a weekly letter's first link list item to readable text`() {
+            // ----- Arrange -----
+            val markdown = """
+                ## #104 2026-07-13 Weekly
+
+                ## 📚 Article & References
+
+                - [Mirage: Cloudy Grows into a Graphics Effect Library](https://proandroiddev.com/mirage): Mirage has expanded its capabilities.
+            """.trimIndent()
+
+            // ----- Act -----
+            val preview = mapper.extractPreview(markdown)
+
+            // ----- Assert -----
+            assertEquals(
+                "Mirage: Cloudy Grows into a Graphics Effect Library: Mirage has expanded its capabilities.",
+                preview,
+            )
+        }
+
+        @Test
+        fun `skips an HTML banner and starts at the prose`() {
+            // ----- Arrange -----
+            val markdown = "<img src=\"https://example.com/banner.png\" width=\"23%\"/>\n\nThe actual opening line."
+
+            // ----- Act -----
+            val preview = mapper.extractPreview(markdown)
+
+            // ----- Assert -----
+            assertEquals(
+                "The actual opening line.",
+                preview,
+            )
+        }
+
+        @Test
+        fun `skips frontmatter so an article preview starts at its prose`() {
+            // ----- Arrange -----
+            val markdown = "---\ndate: 2026-07-07\ntags: [\"Compose\"]\n---\n\n# How an AI Agent Builds UI\n\nAI agents can now reason about a task."
+
+            // ----- Act -----
+            val preview = mapper.extractPreview(markdown)
+
+            // ----- Assert -----
+            assertEquals(
+                "AI agents can now reason about a task.",
+                preview,
+            )
+        }
+    }
+
+    @Nested
+    inner class StripMetadata {
         @Test
         fun `removes the leading publication header line`() {
             // ----- Arrange -----
             val markdown = "## #1 2026-06-12 Weekly\n\nBody paragraph."
 
             // ----- Act -----
-            val result = mapper.stripHeader(markdown)
+            val result = mapper.stripMetadata(markdown)
 
             // ----- Assert -----
             assertEquals(
                 "Body paragraph.",
                 result,
             )
+        }
+
+        @Test
+        fun `removes a frontmatter block so the reader never renders raw YAML`() {
+            // ----- Arrange -----
+            val markdown = "---\ndate: 2026-07-07\ntags: [\"Compose\"]\n---\n\n# Title\n\nBody."
+
+            // ----- Act -----
+            val result = mapper.stripMetadata(markdown)
+
+            // ----- Assert -----
+            assertEquals(
+                "# Title\n\nBody.",
+                result,
+            )
+        }
+    }
+
+    @Nested
+    inner class ParseFrontmatterDate {
+        @Test
+        fun `reads the date an article or interview dates itself with`() {
+            // ----- Arrange -----
+            val markdown = "---\ndate: 2026-07-07\nunlocked: true\n---\n\n# Title"
+
+            // ----- Act -----
+            val date = mapper.parseFrontmatterDate(markdown)
+
+            // ----- Assert -----
+            assertEquals(
+                "2026-07-07",
+                date,
+            )
+        }
+
+        @Test
+        fun `returns null when the publication has no frontmatter`() {
+            // ----- Arrange -----
+            val markdown = "## #1 2026-06-12 Weekly\n\nBody paragraph."
+
+            // ----- Act -----
+            val date = mapper.parseFrontmatterDate(markdown)
+
+            // ----- Assert -----
+            assertNull(date)
         }
     }
 }

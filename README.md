@@ -51,6 +51,27 @@ in the app.
    ```
    It is exposed to the app via `BuildConfig.GITHUB_CLIENT_ID`. The client id is not a secret, but
    lives in `local.properties` so it isn't committed.
+4. Point the app at the repository the publications live in:
+   ```properties
+   DOVELETTER_REPOSITORY=owner/name
+   DOVELETTER_BRANCH=main
+   ```
+
+### Reading the repository during development
+
+The `doveletter` organisation **disallows OAuth apps**, so the device flow cannot produce a token
+that can see the repository, and fine-grained personal access tokens cannot target an organisation
+you are only an outside collaborator of. Until a token-entry screen exists, debug builds read a
+token straight from `local.properties`:
+
+```properties
+DOVELETTER_TOKEN=ghp_xxxxxxxxxxxx
+```
+
+A classic token with the `repo` scope works. It is seeded into encrypted storage the first time a
+token is read, and **only** in debug builds with a non-blank value — release builds declare the
+field empty, so no shipped build carries a credential. Give the token a **90-day expiry** rather
+than no expiration; the same `repo`-scope caveat in the section above applies to it.
 
 ### Linking an account
 
