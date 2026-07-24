@@ -1,15 +1,79 @@
 package nl.rhaydus.nestbox.core.presentation.theme
 
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontVariation
+import androidx.compose.ui.text.font.FontWeight
+import nl.rhaydus.nestbox.R
 
 /**
- * The two families that carry the system, split by voice.
+ * The three voices that carry the system (design system §2.2): a display serif for titles and
+ * headlines, a body serif for running prose, and a monospace accent for chrome — kickers, meta
+ * strips, chips, and code. All three are bundled TTFs under `res/font/`, so the app no longer
+ * depends on system generic families.
  *
- * [readerFontFamily] is the reading face: long-form prose, titles, and Material component chrome.
- * [monoFontFamily] is the developer-native accent for issue labels, metadata, topics, code, and
- * stat numerals. Both resolve to system generic families today. To swap in a bundled or downloadable
- * face, change these two declarations and nothing else in the theme moves.
+ * [monoFontFamily] keeps its name across the redesign, only the backing face changes (`Monospace` to
+ * Spline Sans Mono). The prior [readerFontFamily] (`SansSerif`) is retired: both reading roles now
+ * resolve to a serif rather than a generic sans, so there is no remaining plain-sans voice.
  */
-val readerFontFamily: FontFamily = FontFamily.SansSerif
+val displaySerifFontFamily: FontFamily = FontFamily(
+    Font(
+        resId = R.font.instrument_serif_regular,
+        weight = FontWeight.Normal,
+        style = FontStyle.Normal,
+    ),
+    Font(
+        resId = R.font.instrument_serif_italic,
+        weight = FontWeight.Normal,
+        style = FontStyle.Italic,
+    ),
+)
 
-val monoFontFamily: FontFamily = FontFamily.Monospace
+val bodySerifFontFamily: FontFamily = FontFamily(
+    Font(
+        resId = R.font.newsreader_variable,
+        weight = FontWeight.Normal,
+        style = FontStyle.Normal,
+        variationSettings = FontVariation.Settings(FontVariation.weight(400)),
+    ),
+    Font(
+        resId = R.font.newsreader_variable,
+        weight = FontWeight.Medium,
+        style = FontStyle.Normal,
+        variationSettings = FontVariation.Settings(FontVariation.weight(500)),
+    ),
+    Font(
+        resId = R.font.newsreader_variable,
+        weight = FontWeight.SemiBold,
+        style = FontStyle.Normal,
+        variationSettings = FontVariation.Settings(FontVariation.weight(600)),
+    ),
+    Font(
+        resId = R.font.newsreader_italic_variable,
+        weight = FontWeight.Normal,
+        style = FontStyle.Italic,
+        variationSettings = FontVariation.Settings(FontVariation.weight(400)),
+    ),
+)
+
+val monoFontFamily: FontFamily = FontFamily(
+    Font(
+        resId = R.font.spline_sans_mono_variable,
+        weight = FontWeight.Normal,
+        style = FontStyle.Normal,
+        variationSettings = FontVariation.Settings(FontVariation.weight(400)),
+    ),
+    Font(
+        resId = R.font.spline_sans_mono_variable,
+        weight = FontWeight.Medium,
+        style = FontStyle.Normal,
+        variationSettings = FontVariation.Settings(FontVariation.weight(500)),
+    ),
+    Font(
+        resId = R.font.spline_sans_mono_variable,
+        weight = FontWeight.SemiBold,
+        style = FontStyle.Normal,
+        variationSettings = FontVariation.Settings(FontVariation.weight(600)),
+    ),
+)

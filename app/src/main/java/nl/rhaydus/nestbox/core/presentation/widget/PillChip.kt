@@ -1,20 +1,29 @@
 package nl.rhaydus.nestbox.core.presentation.widget
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import nl.rhaydus.nestbox.core.presentation.theme.nestboxColors
+import nl.rhaydus.nestbox.core.presentation.theme.readerTypography
+
+private val pillShape = RoundedCornerShape(percent = 50)
 
 /**
- * The canonical fully-rounded pill (design system §4): a [Surface] carrying a single label.
- * [isSelected] swaps to `secondaryContainer`/`onSecondaryContainer` with a semibold label, idle sits
- * on `surfaceContainerHigh`/`onSurface`. Pass [onClick] for an interactive chip such as a filter
- * facet; omit it for a read-only tag.
+ * The type-facet pill (design system §B2): h30, padded 7×13, a mono label at 10sp with 0.14em
+ * tracking. Selected fills ink with paper text; idle stays transparent with a
+ * [NestboxColors.idleChipStroke][nl.rhaydus.nestbox.core.presentation.theme.NestboxColors]-stroked
+ * outline and an `idleChipText`-coloured label. Pass [onClick] for an interactive facet chip; omit it
+ * for a read-only tag, which then carries no click semantics and no ripple.
  */
 @Composable
 fun PillChip(
@@ -23,46 +32,46 @@ fun PillChip(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
 ) {
-    val containerColor = if (isSelected) {
-        MaterialTheme.colorScheme.secondaryContainer
-    } else {
-        MaterialTheme.colorScheme.surfaceContainerHigh
-    }
+    val ink = MaterialTheme.colorScheme.inverseSurface
+    val paper = MaterialTheme.colorScheme.inverseOnSurface
 
-    val contentColor = if (isSelected) {
-        MaterialTheme.colorScheme.onSecondaryContainer
-    } else {
-        MaterialTheme.colorScheme.onSurface
-    }
-
-    val labelStyle = if (isSelected) {
-        MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold)
-    } else {
-        MaterialTheme.typography.labelLarge
-    }
+    val containerColor = if (isSelected) ink else Color.Transparent
+    val contentColor = if (isSelected) paper else MaterialTheme.nestboxColors.chipIdleText
+    val border = if (isSelected) null else BorderStroke(
+        1.dp,
+        MaterialTheme.nestboxColors.idleChipStroke,
+    )
 
     val labelContent = @Composable {
-        Text(
-            text = label,
-            style = labelStyle,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-        )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .height(30.dp)
+                .padding(horizontal = 13.dp),
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.readerTypography.chipLabel,
+            )
+        }
     }
 
     if (onClick != null) {
         Surface(
             onClick = onClick,
-            shape = RoundedCornerShape(percent = 50),
+            shape = pillShape,
             color = containerColor,
             contentColor = contentColor,
+            border = border,
             modifier = modifier,
             content = labelContent,
         )
     } else {
         Surface(
-            shape = RoundedCornerShape(percent = 50),
+            shape = pillShape,
             color = containerColor,
             contentColor = contentColor,
+            border = border,
             modifier = modifier,
             content = labelContent,
         )

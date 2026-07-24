@@ -7,27 +7,32 @@ private val baseline = Typography()
 
 /**
  * The Material type scale consumed implicitly by off-the-shelf Material 3 components such as top-bar
- * titles, button labels, and navigation labels. It is the standard scale set in the reading face.
- * The screen-composed editorial roles live in [ReaderTypography]. The body roles get a touch more
- * line height than the Material default so running prose reads comfortably.
+ * titles, button labels, and navigation labels. Display/headline/title roles set in
+ * [displaySerifFontFamily] (the same voice as [ReaderTypography.headline] and its siblings), body
+ * roles in [bodySerifFontFamily], and label roles — button and navigation text — in [monoFontFamily]:
+ * the system's chrome, wherever it comes from a stock Material component rather than a
+ * screen-composed one, speaks in the same mono voice as [ReaderTypography]'s kicker and meta roles
+ * (design system §1, "monospace as voice"). The screen-composed editorial roles live in
+ * [ReaderTypography]. The body roles get a touch more line height than the Material default so
+ * running prose reads comfortably.
  */
 val NestboxTypography: Typography = Typography(
-    displayLarge = baseline.displayLarge.copy(fontFamily = readerFontFamily),
-    displayMedium = baseline.displayMedium.copy(fontFamily = readerFontFamily),
-    displaySmall = baseline.displaySmall.copy(fontFamily = readerFontFamily),
-    headlineLarge = baseline.headlineLarge.copy(fontFamily = readerFontFamily),
-    headlineMedium = baseline.headlineMedium.copy(fontFamily = readerFontFamily),
-    headlineSmall = baseline.headlineSmall.copy(fontFamily = readerFontFamily),
-    titleLarge = baseline.titleLarge.copy(fontFamily = readerFontFamily),
-    titleMedium = baseline.titleMedium.copy(fontFamily = readerFontFamily),
-    titleSmall = baseline.titleSmall.copy(fontFamily = readerFontFamily),
+    displayLarge = baseline.displayLarge.copy(fontFamily = displaySerifFontFamily),
+    displayMedium = baseline.displayMedium.copy(fontFamily = displaySerifFontFamily),
+    displaySmall = baseline.displaySmall.copy(fontFamily = displaySerifFontFamily),
+    headlineLarge = baseline.headlineLarge.copy(fontFamily = displaySerifFontFamily),
+    headlineMedium = baseline.headlineMedium.copy(fontFamily = displaySerifFontFamily),
+    headlineSmall = baseline.headlineSmall.copy(fontFamily = displaySerifFontFamily),
+    titleLarge = baseline.titleLarge.copy(fontFamily = displaySerifFontFamily),
+    titleMedium = baseline.titleMedium.copy(fontFamily = displaySerifFontFamily),
+    titleSmall = baseline.titleSmall.copy(fontFamily = displaySerifFontFamily),
     bodyLarge = baseline.bodyLarge.copy(
-        fontFamily = readerFontFamily,
+        fontFamily = bodySerifFontFamily,
         lineHeight = 26.sp,
     ),
-    bodyMedium = baseline.bodyMedium.copy(fontFamily = readerFontFamily),
-    bodySmall = baseline.bodySmall.copy(fontFamily = readerFontFamily),
-    labelLarge = baseline.labelLarge.copy(fontFamily = readerFontFamily),
-    labelMedium = baseline.labelMedium.copy(fontFamily = readerFontFamily),
-    labelSmall = baseline.labelSmall.copy(fontFamily = readerFontFamily),
+    bodyMedium = baseline.bodyMedium.copy(fontFamily = bodySerifFontFamily),
+    bodySmall = baseline.bodySmall.copy(fontFamily = bodySerifFontFamily),
+    labelLarge = baseline.labelLarge.copy(fontFamily = monoFontFamily),
+    labelMedium = baseline.labelMedium.copy(fontFamily = monoFontFamily),
+    labelSmall = baseline.labelSmall.copy(fontFamily = monoFontFamily),
 )

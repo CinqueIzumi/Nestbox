@@ -18,9 +18,10 @@ import nl.rhaydus.nestbox.core.presentation.theme.readerTypography
 
 /**
  * The canonical empty state (design system §4): an oversized, low-alpha outline [icon] over an
- * italic encouragement [headline] in the reader `pullQuote` voice. A page-level moment for a
- * genuinely empty root surface, not the tool for a narrow, single-facet miss, which §4 deliberately
- * keeps as a bare text line so a full glyph does not overstate a momentary gap.
+ * italic encouragement [headline] in the reader `pullQuote` voice (Instrument Serif italic). A
+ * page-level moment for a genuinely empty root surface, not the tool for a narrow, single-facet
+ * miss, which §4 deliberately keeps as a bare text line so a full glyph does not overstate a
+ * momentary gap.
  *
  * The glyph sits directly above a headline that already carries the same message in words, so it is
  * treated as decorative and carries no content description: a screen reader announces the headline
@@ -42,7 +43,7 @@ fun EmptyState(
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.32f),
+            tint = MaterialTheme.colorScheme.outline.copy(alpha = 0.35f),
             modifier = Modifier.size(96.dp),
         )
 

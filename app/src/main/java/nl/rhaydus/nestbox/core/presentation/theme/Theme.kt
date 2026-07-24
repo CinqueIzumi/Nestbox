@@ -95,8 +95,12 @@ fun NestboxTheme(
     content: @Composable () -> Unit,
 ) {
     val colorScheme = if (darkTheme) darkScheme else lightScheme
+    val nestboxColors = if (darkTheme) DuskNestboxColors else LightNestboxColors
 
-    CompositionLocalProvider(LocalReaderTypography provides DefaultReaderTypography) {
+    CompositionLocalProvider(
+        LocalReaderTypography provides DefaultReaderTypography,
+        LocalNestboxColors provides nestboxColors,
+    ) {
         RhaydusTheme(
             colorScheme = colorScheme,
             typography = NestboxTypography,

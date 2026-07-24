@@ -12,7 +12,7 @@ object HomeTab : Tab {
     override val options: TabOptions
         @Composable
         get() {
-            val title = "Home"
+            val title = "Nest"
             val icon = rememberVectorPainter(Icons.Default.Home)
 
             return remember {
