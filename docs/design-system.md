@@ -20,10 +20,26 @@ source. The whole job of the app is to make reading each publication of the Dove
 
 The content is shaped as **publications**, each of one of three **types**: a **weekly letter** (a
 dated, numbered edition that gathers several **entries**, short write-ups and links), an **article**,
-or an **interview**. The reader browses publications, opens one to read, marks them read as they go,
-and saves publications to return to later. Inside a weekly letter, individual entries can be read and
-saved the same way. The word "issue" is deliberately avoided here so it stays free for GitHub Issues,
+or a piece of **interview prep**. The reader browses publications, opens one to read, marks them read
+as they go, and saves publications to return to later. Inside a weekly letter, individual entries can
+be read and saved the same way. The word "issue" is deliberately avoided here so it stays free for GitHub Issues,
 which the app may later use for community communication, not content.
+
+**Interview prep is preparation material for a job interview**, not a conversation with someone. The
+repository names that directory `interview`, which is easy to misread, and the app must never echo
+that misreading back at the reader: the type is labelled "Interview prep" everywhere it surfaces, and
+its section headline is "Get ready". Copy that calls these pieces interviews, or files them under a
+heading like "Conversations", is a bug in the content model, not a wording preference.
+
+The types differ in more than a label, and the app is expected to keep them visibly apart. A weekly
+letter has a **cadence**: it is dated and numbered, it is read to keep up, and it goes stale. An
+article or a piece of interview prep is **evergreen**: it is a standalone titled piece read whenever
+its topic is what the reader wants. That difference drives how each one is identified. An article or
+a piece of interview prep carries **its own title**, so that title is its headline everywhere it
+appears. A weekly letter has
+none, and is identified by its number and date instead, so it wears the newsletter's own name, "The
+Doveletter", as its headline. Blending the three into one undifferentiated chronological stream is a
+regression: see the type facet strip and the sectioned archive in §5.
 
 The Doveletter is published to a private GitHub repository that only subscribers can read, so the
 reader connects a GitHub account (OAuth device flow) before any content can load. This is an
@@ -213,8 +229,9 @@ headers without a generous gap between them is a layout bug.
 
 ### 2.6 Iconography
 
-- Material **outline** icons, consistent stroke weight across the app. Never mix filled and outlined
-  icon families on the same surface. The one earned filled glyph is the *active* bookmark (saved),
+- Material **outline** icons, consistent stroke weight across the app, drawn from
+  `material-icons-extended` (the core artifact carries only a handful of names and cannot dress the
+  system). Never mix filled and outlined icon families on the same surface. The one earned filled glyph is the *active* bookmark (saved),
   which sits beside its outline idle state on the same control, a deliberate state pair, not a mix.
 - Icon only controls always carry a content description.
 - Icon size scales with the control's size token. An icon embedded in body type sits on the type
@@ -273,8 +290,12 @@ Entry row anatomy (leading-to-trailing, the default compact row):
 5. Optional trailing **save** affordance (the bookmark toggle) and an optional topic chip.
 
 An **publication card** promotes the same anatomy for a whole edition: a larger block carrying the publication
-`kicker` (`WEEKLY LETTER #142`), its date, the `headline` (the publication title or its first entry), and a `meta`
-count of entries and unread items. A featured entry card uses the `headline` role and a larger
+`kicker` (`WEEKLY LETTER #142`, or plain `ARTICLE` / `INTERVIEW PREP` where there is no number), its date,
+the `headline`, and a `meta` count of entries and unread items. The headline is the publication's own
+title where it has one, which is how an article and an interview announce themselves; a weekly letter
+has no title of its own and falls back to "The Doveletter" (§0). The type kicker stays on the card
+even inside a section that already names the type, because it is the only thing orienting a card once
+its section header has scrolled away. A featured entry card uses the `headline` role and a larger
 thumbnail. Horizontal carousel cards are fixed width and height and never paint an overflow
 affordance. The rightmost card clipped against the 24 dp gutter is itself the "there is more" cue. Do
 not add an edge fade, chevron, or page indicator.
@@ -285,7 +306,9 @@ The reading view is the system's reason to exist, so it gets its own rules. It s
 entry and a whole publication (a stack of entries under one publication header).
 
 - It opens with the **publication kicker** (`WEEKLY LETTER #142`), the `headline`, the `meta` strip, and an optional
-  hero image, then the **lead paragraph** in `bodyLarge`, then the body in `body`.
+  hero image, then the **lead paragraph** in `bodyLarge`, then the body in `body`. The `headline` is
+  the publication's own title, falling back to "The Doveletter" for a weekly letter (§0). An open
+  article that announces itself as the newsletter rather than as itself is a bug.
 - Body prose holds a comfortable measure (24 dp gutters, never edge to edge), separates paragraphs by
   a full line, and renders on the plain-page surface.
 - **Code** in the body renders inline (the `code` role on a faint wash) or as a fenced
@@ -330,10 +353,13 @@ blocks live in `core/presentation/widget/`, theming in `core/presentation/theme/
 - **Button.** The Material expressive button styles (filled, tonal, outlined, text) across the size
   scale. Filled is the region's one primary action. Never two competing primaries on a surface.
 - **Pill chip.** The canonical fully-rounded (`RoundedCornerShape(percent = 50)`) chip: a `Surface`
-  carrying a single label. It backs both **topic filter chips** and read-only **topic tags**.
-  Selected uses `secondaryContainer` / `onSecondaryContainer` with a semibold label, idle uses
-  `surfaceContainerHigh` / `onSurface`. Pass `onClick` for an interactive chip such as a filter, omit
-  it for a read-only tag. Reach for it instead of hand-rolling a `Surface` and `Text` pill.
+  carrying a single label. It backs the **type facet strip**, **topic filter chips**, and read-only
+  **topic tags**. Selected uses `secondaryContainer` / `onSecondaryContainer` with a semibold label,
+  idle uses `surfaceContainerHigh` / `onSurface`. Pass `onClick` for an interactive chip such as a
+  filter, omit it for a read-only tag, in which case it carries no click semantics and no ripple. The
+  label is a plain English control word, not chrome metadata, so it takes the Material `labelLarge`
+  role in the reading sans rather than a mono `readerTypography` role. Reach for it instead of
+  hand-rolling a `Surface` and `Text` pill.
 - **Publication card and entry row.** The §3.4 anatomy, the workhorse of every list surface. Reserves its
   optional rows so the list never reflows.
 - **Save (bookmark) toggle.** An icon toggle that saves an entry for later. Idle is the outline
@@ -350,8 +376,17 @@ blocks live in `core/presentation/widget/`, theming in `core/presentation/theme/
 - **Stat tile.** A numeric stat in the mono `statNumber` role with a `kicker` unit label above it,
   never a unit suffix beside the number. One may be promoted to the primary filled stat hero per
   region (§2.1, §3.3).
-- **Empty state.** An oversized low-alpha glyph or icon over an italic encouragement headline in the
-  `pullQuote` voice. See §5 for the adaptive variant.
+- **Empty state.** An oversized low-alpha outline glyph (96 dp, `onSurfaceVariant` at 0.32 alpha)
+  over an italic encouragement headline in the `pullQuote` voice, centred, 24 dp between the two and
+  48 dp of vertical air around the pair so it reads as a page moment rather than a cramped error row.
+  The glyph is decorative: it sits above a headline that already says the same thing in words, so it
+  carries no content description and a screen reader announces the message once. See §5 for the
+  adaptive variant.
+
+  A **text-only variant**, the `pullQuote` line with no glyph, is the right tool for a narrow miss
+  such as a type facet with nothing behind it, where a full-page glyph would overstate a momentary
+  gap. Choose by scope, not by convenience: a genuinely empty root surface earns the glyph, a
+  filtered view does not.
 - **Pull to refresh.** The Material 3 expressive contained loading indicator inside the standard pull
   to refresh box. This is the one deliberate exception to "wavy progress everywhere", because the
   wavy circle fights the pull arc. Reach for the wavy primitive everywhere else.
@@ -363,9 +398,32 @@ Recurring recipes that compose the primitives above.
 - **The archive.** A vertical list of publication cards or entry rows (§3.4) under a section header (§3.2).
   The default surface of the app. Sorts newest-first. Supports an optional topic filter strip (below)
   and pull-to-refresh. Unread items lead loud, read items demote in place (§2.1).
+
+  The archive is **sectioned by publication type**, never one blended stream (§0). Each type gets its
+  own §3.2 section header, in the fixed order weekly letters, articles, interview prep, and a section with
+  nothing in it is omitted rather than shown empty. The header copy is fixed so the three regions stay
+  recognisable across surfaces:
+
+  | Type           | Kicker            | Headline      |
+  | -------------- | ----------------- | ------------- |
+  | Weekly letter  | `WEEKLY LETTERS`  | Past editions |
+  | Article        | `ARTICLES`        | Long reads    |
+  | Interview prep | `INTERVIEW PREP`  | Get ready     |
+
+- **Type facet strip.** A horizontally scrolling `Row` of pill chips scoping the archive by
+  publication type: a leading **All** chip that clears the scope, then **Weekly letters**,
+  **Articles**, **Interview prep**. It sits directly under the page masthead and **above the hero**,
+  because the facet scopes the whole page, the hero included, and a hero that changed above the
+  control that changed it would read as a glitch. Like the topic filter strip it is a control, not a
+  peek affordance, so it takes no edge fade, chevron, or page indicator, and it stays inside the 24 dp
+  page gutter. It renders even while the archive is loading, so the control does not pop in late. It
+  is a facet, not a filter over topics: the two strips are separate and may eventually coexist.
 - **Latest publication hero.** The Home tab opens on the newest publication as a hero (§3.3): its kicker, its
-  headline, a `meta` count of unread entries, and a primary action into the reading view. Past publications
-  follow below as the archive.
+  headline, a `meta` count of unread entries, and a primary action into the reading view whose label
+  names the type ("Read the weekly letter", "Read the article", "Read the interview"). The hero
+  **follows the selected type facet**: with All selected it is the newest publication of any type,
+  under a single facet it is the newest of that type. It is always excluded from the section below it,
+  so no publication is ever drawn twice on one page. The rest of the archive follows below.
 - **Topic filter strip.** A horizontally scrolling `Row` of pill chips directly above the archive to
   scope it by topic (Compose, Coroutines, Tooling, and so on). The selected chip swaps to
   `secondaryContainer`. Always include a leading "All" chip that clears the filter. A larger topic
@@ -413,6 +471,8 @@ Walk this list before reaching for novelty when building a new surface.
   `surfaceContainerHigh` block. Never set code in the reading sans.
 - **Need to scope a list?** A topic filter strip of pill chips with a leading "All". Push a larger
   picker to a modal sheet.
+- **Need to keep publication types apart?** Both at once: a section per type (§5, fixed order and
+  fixed header copy) and the type facet strip above the hero. Never one blended stream.
 - **Need an accent on a piece of text?** Primary colour on the kicker or a leading word. Do not bold
   or recolour body copy.
 - **Need a divider?** First try a vertical gap or a tone change. Reach for a hairline only when

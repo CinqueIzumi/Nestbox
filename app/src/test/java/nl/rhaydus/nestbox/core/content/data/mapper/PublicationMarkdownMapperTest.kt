@@ -208,6 +208,134 @@ class PublicationMarkdownMapperTest {
     }
 
     @Nested
+    inner class ParseTitle {
+        @Test
+        fun `returns the quoted frontmatter title`() {
+            // ----- Arrange -----
+            val markdown = """
+                ---
+                title: "Quoted Title"
+                date: 2026-07-07
+                ---
+
+                # Different Heading
+
+                Body.
+            """.trimIndent()
+
+            // ----- Act -----
+            val title = mapper.parseTitle(markdown)
+
+            // ----- Assert -----
+            assertEquals(
+                "Quoted Title",
+                title,
+            )
+        }
+
+        @Test
+        fun `returns the bare frontmatter title`() {
+            // ----- Arrange -----
+            val markdown = """
+                ---
+                title: Bare Title
+                date: 2026-07-07
+                ---
+
+                # Different Heading
+
+                Body.
+            """.trimIndent()
+
+            // ----- Act -----
+            val title = mapper.parseTitle(markdown)
+
+            // ----- Assert -----
+            assertEquals(
+                "Bare Title",
+                title,
+            )
+        }
+
+        @Test
+        fun `falls back to the first level-1 heading after frontmatter when there is no frontmatter title`() {
+            // ----- Arrange -----
+            val markdown = "---\ndate: 2026-07-07\ntags: [\"Compose\"]\n---\n\n# How an AI Agent Builds UI\n\nAI agents can now reason about a task."
+
+            // ----- Act -----
+            val title = mapper.parseTitle(markdown)
+
+            // ----- Assert -----
+            assertEquals(
+                "How an AI Agent Builds UI",
+                title,
+            )
+        }
+
+        @Test
+        fun `falls back to the level-1 heading when there is no frontmatter at all`() {
+            // ----- Arrange -----
+            val markdown = "# Title Without Frontmatter\n\nBody paragraph."
+
+            // ----- Act -----
+            val title = mapper.parseTitle(markdown)
+
+            // ----- Assert -----
+            assertEquals(
+                "Title Without Frontmatter",
+                title,
+            )
+        }
+
+        @Test
+        fun `returns null for a weekly letter, which carries no level-1 heading`() {
+            // ----- Arrange -----
+            val markdown = """
+                ## #7 2026-06-12 Weekly
+
+                - [Some Link](https://example.com): Description.
+            """.trimIndent()
+
+            // ----- Act -----
+            val title = mapper.parseTitle(markdown)
+
+            // ----- Assert -----
+            assertNull(title)
+        }
+
+        @Test
+        fun `never mistakes a level-2 heading for a title`() {
+            // ----- Arrange -----
+            val markdown = """
+                ## Section Heading
+
+                Body paragraph.
+            """.trimIndent()
+
+            // ----- Act -----
+            val title = mapper.parseTitle(markdown)
+
+            // ----- Assert -----
+            assertNull(title)
+        }
+
+        @Test
+        fun `strips markdown link syntax from the heading, mirroring extractPreview`() {
+            // ----- Arrange -----
+            val markdown = "# [Mirage: Cloudy Grows into a Graphics Effect Library](https://proandroiddev.com/mirage)"
+
+            // ----- Act -----
+            val title = mapper.parseTitle(markdown)
+
+            // ----- Assert -----
+            assertEquals(
+                "Mirage: Cloudy Grows into a Graphics Effect Library",
+                title,
+            )
+        }
+    }
+
+    @Nested
     inner class ParseFrontmatterDate {
         @Test
         fun `reads the date an article or interview dates itself with`() {

@@ -5,5 +5,6 @@ data class PublicationSummary(
     val type: PublicationType,
     val number: Int?,
     val date: String,
+    val title: String?,
     val previewText: String,
 )

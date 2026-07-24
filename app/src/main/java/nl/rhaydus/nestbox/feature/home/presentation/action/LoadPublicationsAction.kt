@@ -4,6 +4,7 @@ import nl.rhaydus.nestbox.feature.home.presentation.event.HomeEvent
 import nl.rhaydus.nestbox.feature.home.presentation.screenmodel.HomeDependencies
 import nl.rhaydus.nestbox.feature.home.presentation.state.HomeLocalVariables
 import nl.rhaydus.nestbox.feature.home.presentation.state.HomeUiState
+import nl.rhaydus.nestbox.feature.home.presentation.state.deriveHomeSelection
 import nl.rhaydus.toad.ActionScope
 
 internal data object LoadPublicationsAction : HomeAction {
@@ -11,17 +12,27 @@ internal data object LoadPublicationsAction : HomeAction {
         dependencies: HomeDependencies,
         scope: ActionScope<HomeUiState, HomeEvent, HomeLocalVariables>,
     ) {
-        scope.setState { it.copy(
-            isLoading = true,
-            errorMessage = null,
-        ) }
+        scope.setState {
+            it.copy(
+                isLoading = true,
+                errorMessage = null,
+            )
+        }
 
         dependencies.getPublicationsUseCase()
             .onSuccess { publications ->
+                scope.setLocalVariables { it.copy(publications = publications) }
+
                 scope.setState {
+                    val selection = deriveHomeSelection(
+                        publications = publications,
+                        filter = it.selectedFilter,
+                    )
+
                     it.copy(
                         isLoading = false,
-                        publications = publications,
+                        hero = selection.hero,
+                        sections = selection.sections,
                         errorMessage = null,
                     )
                 }

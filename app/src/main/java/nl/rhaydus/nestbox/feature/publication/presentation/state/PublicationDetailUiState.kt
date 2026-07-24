@@ -9,6 +9,7 @@ internal data class PublicationDetailUiState(
     val type: PublicationType? = null,
     val number: Int? = null,
     val date: String? = null,
+    val title: String? = null,
     val blocks: List<MarkdownBlock> = emptyList(),
     val errorMessage: String? = null,
 ) : UiState

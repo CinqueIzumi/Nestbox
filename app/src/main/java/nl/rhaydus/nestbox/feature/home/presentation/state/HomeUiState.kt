@@ -5,6 +5,8 @@ import nl.rhaydus.toad.UiState
 
 internal data class HomeUiState(
     val isLoading: Boolean = true,
-    val publications: List<PublicationSummary> = emptyList(),
+    val selectedFilter: PublicationFilter = PublicationFilter.ALL,
+    val hero: PublicationSummary? = null,
+    val sections: List<PublicationSection> = emptyList(),
     val errorMessage: String? = null,
 ) : UiState

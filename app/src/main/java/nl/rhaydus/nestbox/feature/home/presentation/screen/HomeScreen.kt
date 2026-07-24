@@ -1,5 +1,6 @@
 package nl.rhaydus.nestbox.feature.home.presentation.screen
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,6 +13,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Inbox
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -31,20 +35,29 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import nl.rhaydus.designsystem.layout.rememberBottomBarPadding
 import nl.rhaydus.nestbox.core.content.domain.model.PublicationSummary
+import nl.rhaydus.nestbox.core.presentation.publicationDisplayTitle
 import nl.rhaydus.nestbox.core.presentation.theme.readerTypography
+import nl.rhaydus.nestbox.core.presentation.widget.EmptyState
+import nl.rhaydus.nestbox.core.presentation.widget.PillChip
 import nl.rhaydus.nestbox.core.presentation.widget.PublicationCard
 import nl.rhaydus.nestbox.core.presentation.widget.SectionHeader
 import nl.rhaydus.nestbox.feature.home.presentation.action.HomeAction
 import nl.rhaydus.nestbox.feature.home.presentation.action.OpenPublicationAction
+import nl.rhaydus.nestbox.feature.home.presentation.action.SelectPublicationFilterAction
 import nl.rhaydus.nestbox.feature.home.presentation.event.HomeEvent
 import nl.rhaydus.nestbox.feature.home.presentation.screenmodel.HomeScreenModel
 import nl.rhaydus.nestbox.feature.home.presentation.state.HomeUiState
+import nl.rhaydus.nestbox.feature.home.presentation.state.PublicationFilter
+import nl.rhaydus.nestbox.feature.home.presentation.state.PublicationSection
 import nl.rhaydus.nestbox.feature.publication.presentation.screen.PublicationDetailScreen
 
 object HomeScreen : Screen {
     private const val MASTHEAD_KEY = "masthead"
+    private const val FACET_STRIP_KEY = "facet_strip"
     private const val LOADING_KEY = "loading"
     private const val ERROR_KEY = "error"
+    private const val EMPTY_KEY = "empty"
+    private const val HERO_KEY = "hero"
 
     @Composable
     override fun Content() {
@@ -99,47 +112,106 @@ object HomeScreen : Screen {
                 }
             }
 
+            item(key = FACET_STRIP_KEY) {
+                Column {
+                    FacetStrip(
+                        selectedFilter = state.selectedFilter,
+                        onSelect = { filter -> runAction(SelectPublicationFilterAction(filter)) },
+                    )
+
+                    Spacer(modifier = Modifier.height(28.dp))
+                }
+            }
+
             when {
                 state.isLoading -> item(key = LOADING_KEY) { LoadingState() }
 
                 errorMessage != null -> item(key = ERROR_KEY) { ErrorState(message = errorMessage) }
 
-                else -> publicationArchive(
-                    publications = state.publications,
-                    runAction = runAction,
+                state.hero != null || state.sections.isNotEmpty() ->
+                    publicationArchive(
+                        hero = state.hero,
+                        sections = state.sections,
+                        runAction = runAction,
+                    )
+
+                state.selectedFilter == PublicationFilter.ALL ->
+                    item(key = EMPTY_KEY) {
+                        EmptyState(
+                            icon = Icons.Outlined.Inbox,
+                            headline = "Nothing has synced from the Doveletter yet.",
+                        )
+                    }
+
+                else -> item(key = EMPTY_KEY) { EmptyFacetState(filter = state.selectedFilter) }
+            }
+        }
+    }
+
+    @Composable
+    private fun FacetStrip(
+        selectedFilter: PublicationFilter,
+        onSelect: (PublicationFilter) -> Unit,
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.horizontalScroll(rememberScrollState()),
+        ) {
+            PublicationFilter.entries.forEach { filter ->
+                PillChip(
+                    label = filter.label,
+                    isSelected = filter == selectedFilter,
+                    onClick = { onSelect(filter) },
                 )
             }
         }
     }
 
     private fun LazyListScope.publicationArchive(
-        publications: List<PublicationSummary>,
+        hero: PublicationSummary?,
+        sections: List<PublicationSection>,
         runAction: (HomeAction) -> Unit,
     ) {
-        val latest = publications.firstOrNull() ?: return
-        val archive = publications.drop(1)
-
-        item(key = latest.id) {
-            Column {
+        if (hero != null) {
+            item(key = HERO_KEY) {
                 LatestPublicationHero(
-                    publication = latest,
-                    onOpen = { runAction(OpenPublicationAction(latest.id)) },
+                    publication = hero,
+                    onOpen = { runAction(OpenPublicationAction(hero.id)) },
                 )
+            }
+        }
 
-                Spacer(modifier = Modifier.height(40.dp))
+        sections.forEachIndexed { index, section ->
+            publicationSection(
+                section = section,
+                hasLeadingGap = hero != null || index > 0,
+                runAction = runAction,
+            )
+        }
+    }
+
+    private fun LazyListScope.publicationSection(
+        section: PublicationSection,
+        hasLeadingGap: Boolean,
+        runAction: (HomeAction) -> Unit,
+    ) {
+        item(key = "section_header_${section.type.name}") {
+            Column {
+                if (hasLeadingGap) {
+                    Spacer(modifier = Modifier.height(40.dp))
+                }
 
                 SectionHeader(
-                    kicker = "Archive",
-                    headline = "Past publications",
+                    kicker = section.type.sectionKicker,
+                    headline = section.type.sectionHeadline,
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
             }
         }
 
-        // The hero item already ends with the 20dp run-in, so only later cards carry their own gap.
         itemsIndexed(
-            items = archive,
+            items = section.publications,
             key = { _, publication -> publication.id },
         ) { index, publication ->
             PublicationCard(
@@ -168,7 +240,7 @@ object HomeScreen : Screen {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "The Doveletter",
+                text = publicationDisplayTitle(publication.title),
                 style = MaterialTheme.readerTypography.headline,
                 color = MaterialTheme.colorScheme.onSurface,
             )
@@ -194,7 +266,7 @@ object HomeScreen : Screen {
             Spacer(modifier = Modifier.height(20.dp))
 
             Button(onClick = onOpen) {
-                Text(text = "Read publication")
+                Text(text = "Read the ${publication.type.label.lowercase()}")
             }
         }
     }
@@ -222,6 +294,15 @@ object HomeScreen : Screen {
             text = message,
             style = MaterialTheme.readerTypography.body,
             color = MaterialTheme.colorScheme.error,
+        )
+    }
+
+    @Composable
+    private fun EmptyFacetState(filter: PublicationFilter) {
+        Text(
+            text = "No ${filter.label.lowercase()} yet.",
+            style = MaterialTheme.readerTypography.pullQuote,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }

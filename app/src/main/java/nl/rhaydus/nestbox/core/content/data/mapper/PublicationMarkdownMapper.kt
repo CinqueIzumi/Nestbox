@@ -35,6 +35,38 @@ class PublicationMarkdownMapper {
     }
 
     /**
+     * An article or interview's title: the `title:` field of a YAML frontmatter block if present,
+     * otherwise the first level-1 heading in the content. Weekly letters carry neither, since their
+     * `## #7 2026-06-12 Weekly` header is level 2 and never matches.
+     */
+    fun parseTitle(markdown: String): String? = parseFrontmatterTitle(markdown) ?: parseHeadingTitle(markdown)
+
+    private fun parseFrontmatterTitle(markdown: String): String? {
+        val lines = markdown.lines()
+
+        if (lines.firstOrNull()?.trim() != FRONTMATTER_FENCE) return null
+
+        return lines
+            .drop(1)
+            .takeWhile { line -> line.trim() != FRONTMATTER_FENCE }
+            .firstNotNullOfOrNull { line -> FRONTMATTER_TITLE_REGEX.find(line)?.groupValues?.get(1) }
+            ?.trim()
+            ?.removeSurrounding("\"")
+            ?.removeSurrounding("'")
+            ?.ifBlank { null }
+    }
+
+    private fun parseHeadingTitle(markdown: String): String? {
+        val headingLine = withoutFrontmatter(markdown)
+            .lineSequence()
+            .map { line -> line.trim() }
+            .firstOrNull { line -> line.startsWith(HEADING_ONE_MARKER) }
+            ?: return null
+
+        return toPlainText(headingLine.removePrefix(HEADING_ONE_MARKER)).ifBlank { null }
+    }
+
+    /**
      * The publication's first line of readable content, collapsed onto one line.
      *
      * Publications do not all open with prose: a weekly letter's first content is a link list item,
@@ -99,6 +131,7 @@ class PublicationMarkdownMapper {
     private companion object {
         const val FRONTMATTER_FENCE = "---"
         const val HEADING_MARKER = "#"
+        const val HEADING_ONE_MARKER = "# "
         const val HTML_MARKER = "<"
 
         // The opening fence plus the closing one, both dropped to reach the content.
@@ -106,6 +139,7 @@ class PublicationMarkdownMapper {
 
         val HEADER_REGEX = Regex("""##\s+#(\d+)\s+(\d{4}-\d{2}-\d{2})\s+(\w+)""")
         val FRONTMATTER_DATE_REGEX = Regex("""^date:\s*"?(\d{4}-\d{2}-\d{2})"?""")
+        val FRONTMATTER_TITLE_REGEX = Regex("""^title:\s*(.+)$""")
         val LIST_MARKER_REGEX = Regex("""^\s*(?:[-*+]|\d+\.)\s+""")
         val IMAGE_REGEX = Regex("""!\[[^\]]*]\([^)]*\)""")
         val LINK_REGEX = Regex("""\[([^\]]+)]\([^)]*\)""")

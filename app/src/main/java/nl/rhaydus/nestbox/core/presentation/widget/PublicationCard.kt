@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import nl.rhaydus.nestbox.core.content.domain.model.PublicationSummary
+import nl.rhaydus.nestbox.core.presentation.publicationDisplayTitle
 import nl.rhaydus.nestbox.core.presentation.theme.readerTypography
 
 /**
@@ -69,7 +70,7 @@ fun PublicationCard(
             Spacer(modifier = Modifier.height(6.dp))
 
             Text(
-                text = "The Doveletter",
+                text = publicationDisplayTitle(publication.title),
                 style = MaterialTheme.readerTypography.articleTitle,
                 color = MaterialTheme.colorScheme.onSurface,
             )

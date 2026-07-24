@@ -39,6 +39,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import nl.rhaydus.nestbox.core.content.domain.model.PublicationType
 import nl.rhaydus.nestbox.core.presentation.markdown.MarkdownDocument
+import nl.rhaydus.nestbox.core.presentation.publicationDisplayTitle
 import nl.rhaydus.nestbox.core.presentation.theme.readerTypography
 import nl.rhaydus.nestbox.feature.publication.presentation.action.OpenLinkAction
 import nl.rhaydus.nestbox.feature.publication.presentation.action.PublicationDetailAction
@@ -156,6 +157,7 @@ data class PublicationDetailScreen(val publicationId: String) : Screen {
                     type = state.type,
                     number = state.number,
                     date = state.date,
+                    title = state.title,
                 )
 
                 Spacer(modifier = Modifier.height(28.dp))
@@ -175,6 +177,7 @@ data class PublicationDetailScreen(val publicationId: String) : Screen {
         type: PublicationType?,
         number: Int?,
         date: String?,
+        title: String?,
     ) {
         val typeLabel = type?.label?.uppercase()
         val kicker = when {
@@ -195,7 +198,7 @@ data class PublicationDetailScreen(val publicationId: String) : Screen {
             }
 
             Text(
-                text = "The Doveletter",
+                text = publicationDisplayTitle(title),
                 style = MaterialTheme.readerTypography.headline,
                 color = MaterialTheme.colorScheme.onSurface,
             )

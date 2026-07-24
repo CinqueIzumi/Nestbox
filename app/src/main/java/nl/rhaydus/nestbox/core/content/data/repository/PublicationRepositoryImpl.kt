@@ -54,18 +54,23 @@ internal class PublicationRepositoryImpl(
 
         val markdown = localDataSource.readMarkdown(id)
         val header = mapper.parseHeader(markdown)
+        val type = typeOf(
+            header = header,
+            path = id,
+        )
 
         Publication(
             id = id,
-            type = typeOf(
-                header = header,
-                path = id,
-            ),
+            type = type,
             number = header?.number,
             date = dateOf(
                 header = header,
                 markdown = markdown,
                 path = id,
+            ),
+            title = titleOf(
+                type = type,
+                markdown = markdown,
             ),
             markdown = mapper.stripMetadata(markdown),
         )
@@ -130,18 +135,23 @@ internal class PublicationRepositoryImpl(
     private suspend fun summaryOf(path: String): PublicationSummary {
         val markdown = localDataSource.readMarkdown(path)
         val header = mapper.parseHeader(markdown)
+        val type = typeOf(
+            header = header,
+            path = path,
+        )
 
         return PublicationSummary(
             id = path,
-            type = typeOf(
-                header = header,
-                path = path,
-            ),
+            type = type,
             number = header?.number,
             date = dateOf(
                 header = header,
                 markdown = markdown,
                 path = path,
+            ),
+            title = titleOf(
+                type = type,
+                markdown = markdown,
             ),
             previewText = mapper.extractPreview(markdown),
         )
@@ -172,7 +182,7 @@ internal class PublicationRepositoryImpl(
 
         return when (path.substringBefore('/')) {
             ARTICLE_DIRECTORY -> PublicationType.ARTICLE
-            INTERVIEW_DIRECTORY -> PublicationType.INTERVIEW
+            INTERVIEW_DIRECTORY -> PublicationType.INTERVIEW_PREP
             else -> PublicationType.WEEKLY_LETTER
         }
     }
@@ -184,6 +194,17 @@ internal class PublicationRepositoryImpl(
     ): String = header?.date
         ?: mapper.parseFrontmatterDate(markdown)
         ?: DATE_IN_PATH_REGEX.find(path)?.value.orEmpty()
+
+    // A weekly letter has no title of its own; it wears "The Doveletter" instead, regardless of
+    // whether a stray top-level heading happens to appear somewhere in its body.
+    private fun titleOf(
+        type: PublicationType,
+        markdown: String,
+    ): String? {
+        if (type == PublicationType.WEEKLY_LETTER) return null
+
+        return mapper.parseTitle(markdown)
+    }
 
     private companion object {
         const val MAX_CONCURRENT_DOWNLOADS = 8

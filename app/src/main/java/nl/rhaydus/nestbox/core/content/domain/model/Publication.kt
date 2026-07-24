@@ -5,5 +5,6 @@ data class Publication(
     val type: PublicationType,
     val number: Int?,
     val date: String,
+    val title: String?,
     val markdown: String,
 )

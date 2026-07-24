@@ -105,6 +105,10 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.core)
+    // The design system's empty states call for expressive glyphs, which icons-core does not carry.
+    // Note this artifact ships whole: `isMinifyEnabled` is false on release, so R8 never runs and
+    // never strips the icons the app does not reference. Turning minification on would reclaim it.
+    implementation(libs.androidx.compose.material.icons.extended)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.platform.launcher)

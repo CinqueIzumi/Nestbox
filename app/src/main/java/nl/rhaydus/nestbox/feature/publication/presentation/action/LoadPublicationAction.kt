@@ -29,6 +29,7 @@ internal data class LoadPublicationAction(val publicationId: String) : Publicati
                         type = publication.type,
                         number = publication.number,
                         date = publication.date,
+                        title = publication.title,
                         blocks = blocks,
                         errorMessage = null,
                     )
